@@ -18,12 +18,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.group3.project2.common.snackbar.SnackbarManager
-import com.group3.project2.screens.edit_task.EditTaskScreen
+import com.group3.project2.screens.game.GameScreen
+import com.group3.project2.screens.new_game.NewGameScreen
 import com.group3.project2.screens.login.LoginScreen
 import com.group3.project2.screens.settings.SettingsScreen
 import com.group3.project2.screens.sign_up.SignUpScreen
 import com.group3.project2.screens.splash.SplashScreen
-import com.group3.project2.screens.tasks.LobbyScreen
+import com.group3.project2.screens.lobby.LobbyScreen
 import com.group3.project2.theme.UnoTheme
 import kotlinx.coroutines.CoroutineScope
 
@@ -96,15 +97,19 @@ fun NavGraphBuilder.unoGraph(appState: UnoAppState) {
         SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
-    composable(TASKS_SCREEN) {
+    composable(LOBBY_SCREEN) {
         LobbyScreen(openScreen = { route -> appState.navigate(route) })
     }
 
+    composable(GAME_SCREEN) {
+        GameScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    }
+
     composable(
-        route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",
+        route = "$NEW_GAME_SCREEN$TASK_ID_ARG",
         arguments = listOf(navArgument(TASK_ID) { defaultValue = TASK_DEFAULT_ID })
     ) {
-        EditTaskScreen(
+        NewGameScreen(
             popUpScreen = { appState.popUp() },
             taskId = it.arguments?.getString(TASK_ID) ?: TASK_DEFAULT_ID
         )

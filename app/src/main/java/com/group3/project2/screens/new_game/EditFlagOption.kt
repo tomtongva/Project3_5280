@@ -1,4 +1,4 @@
-package com.group3.project2.screens.edit_task
+package com.group3.project2.screens.new_game
 
 enum class EditFlagOption {
     On,

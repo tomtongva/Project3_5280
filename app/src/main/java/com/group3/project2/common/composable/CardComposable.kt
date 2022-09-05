@@ -10,7 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.group3.project2.common.ext.dropdownSelector
 
 @ExperimentalMaterialApi
@@ -68,6 +71,34 @@ private fun CardEditor(
         }
     }
 }
+
+@ExperimentalMaterialApi
+@Composable
+fun UnoCardEditor(
+    cardContent: String,
+    cardColor: Color,
+    modifier: Modifier,
+    onEditClick: () -> Unit
+) {
+    Card(backgroundColor = cardColor, modifier = modifier, onClick = onEditClick) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Text(
+                text = cardContent,
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                fontSize = 50.sp,
+                modifier = Modifier
+                    .padding(16.dp, 0.dp)
+
+            )
+        }
+    }
+}
+
 
 @Composable
 @ExperimentalMaterialApi

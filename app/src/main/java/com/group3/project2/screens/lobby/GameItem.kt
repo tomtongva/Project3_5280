@@ -1,4 +1,4 @@
-package com.group3.project2.screens.tasks
+package com.group3.project2.screens.lobby
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -22,12 +22,14 @@ import java.lang.StringBuilder
 @ExperimentalMaterialApi
 fun GameItem(
     task: Task,
+    onClick: () -> Unit,
     onCheckChange: () -> Unit,
     onActionClick: (String) -> Unit
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
+        onClick = onClick
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

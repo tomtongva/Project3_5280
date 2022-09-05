@@ -1,4 +1,4 @@
-package com.group3.project2.screens.tasks
+package com.group3.project2.screens.lobby
 
 enum class GameActionOption(val title: String) {
     EditGame("Edit task"),

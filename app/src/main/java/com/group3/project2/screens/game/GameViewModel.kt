@@ -1,5 +1,6 @@
-package com.group3.project2.screens.login
+package com.group3.project2.screens.game
 
+import com.group3.project2.screens.login.LoginUiState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.LOGIN_SCREEN
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class GameViewModel @Inject constructor(
     private val accountService: AccountService,
     private val storageService: StorageService,
     private val logService: LogService
