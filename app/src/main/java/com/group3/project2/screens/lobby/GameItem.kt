@@ -22,12 +22,14 @@ import java.lang.StringBuilder
 @ExperimentalMaterialApi
 fun GameItem(
     task: Task,
+    onClick: () -> Unit,
     onCheckChange: () -> Unit,
     onActionClick: (String) -> Unit
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.background,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp),
+        onClick = onClick
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

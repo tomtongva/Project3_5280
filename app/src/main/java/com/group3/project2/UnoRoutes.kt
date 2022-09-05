@@ -6,6 +6,7 @@ const val LOGIN_SCREEN = "LoginScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
 const val LOBBY_SCREEN = "LobbyScreen"
 const val NEW_GAME_SCREEN = "NewGameScreen"
+const val GAME_SCREEN = "GameScreen"
 
 const val TASK_ID = "taskId"
 const val TASK_DEFAULT_ID = "-1"

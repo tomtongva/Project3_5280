@@ -50,6 +50,7 @@ fun LobbyScreen(
                 items(tasks.values.toList(), key = { it.id }) { taskItem ->
                     GameItem(
                         task = taskItem,
+                        onClick = { viewModel.onGameClick(openScreen) },
                         onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
                         onActionClick = { action ->
                             viewModel.onTaskActionClick(openScreen, taskItem, action)

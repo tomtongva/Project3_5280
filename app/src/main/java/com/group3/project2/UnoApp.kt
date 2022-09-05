@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.group3.project2.common.snackbar.SnackbarManager
+import com.group3.project2.screens.game.GameScreen
 import com.group3.project2.screens.new_game.NewGameScreen
 import com.group3.project2.screens.login.LoginScreen
 import com.group3.project2.screens.settings.SettingsScreen
@@ -98,6 +99,10 @@ fun NavGraphBuilder.unoGraph(appState: UnoAppState) {
 
     composable(LOBBY_SCREEN) {
         LobbyScreen(openScreen = { route -> appState.navigate(route) })
+    }
+
+    composable(GAME_SCREEN) {
+        GameScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 
     composable(

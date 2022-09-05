@@ -2,6 +2,7 @@ package com.group3.project2.screens.lobby
 
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
+import com.group3.project2.GAME_SCREEN
 import com.group3.project2.NEW_GAME_SCREEN
 import com.group3.project2.SETTINGS_SCREEN
 import com.group3.project2.TASK_ID
@@ -46,6 +47,8 @@ class LobbyViewModel @Inject constructor(
     fun onAddClick(openScreen: (String) -> Unit) = openScreen(NEW_GAME_SCREEN)
 
     fun onSettingsClick(openScreen: (String) -> Unit) = openScreen(SETTINGS_SCREEN)
+
+    fun onGameClick(openScreen: (String) -> Unit) = openScreen(GAME_SCREEN)
 
     fun onTaskActionClick(openScreen: (String) -> Unit, task: Task, action: String) {
         when (GameActionOption.getByTitle(action)) {
