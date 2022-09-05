@@ -1,4 +1,4 @@
-package com.group3.project2.screens.edit_task
+package com.group3.project2.screens.new_game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -16,7 +16,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class EditTaskViewModel @Inject constructor(
+class NewGameViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
     private val accountService: AccountService

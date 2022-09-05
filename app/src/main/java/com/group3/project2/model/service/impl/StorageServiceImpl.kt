@@ -17,7 +17,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         onDocumentEvent: (Boolean, Task) -> Unit,
         onError: (Throwable) -> Unit
     ) {
-        val query = Firebase.firestore.collection(TASK_COLLECTION).whereEqualTo(USER_ID, userId)
+        val query = Firebase.firestore.collection(GAME_COLLECTION).whereEqualTo(USER_ID, userId)
 
         listenerRegistration = query.addSnapshotListener { value, error ->
             if (error != null) {
@@ -43,7 +43,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         onSuccess: (Task) -> Unit
     ) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .document(taskId)
             .get()
             .addOnFailureListener { error -> onError(error) }
@@ -55,14 +55,14 @@ class StorageServiceImpl @Inject constructor() : StorageService {
 
     override fun saveTask(task: Task, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .add(task)
             .addOnCompleteListener { onResult(it.exception) }
     }
 
     override fun updateTask(task: Task, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .document(task.id)
             .set(task)
             .addOnCompleteListener { onResult(it.exception) }
@@ -70,7 +70,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
 
     override fun deleteTask(taskId: String, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .document(taskId)
             .delete()
             .addOnCompleteListener { onResult(it.exception) }
@@ -78,7 +78,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
 
     override fun deleteAllForUser(userId: String, onResult: (Throwable?) -> Unit) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .whereEqualTo(USER_ID, userId)
             .get()
             .addOnFailureListener { error -> onResult(error) }
@@ -94,7 +94,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         onResult: (Throwable?) -> Unit
     ) {
         Firebase.firestore
-            .collection(TASK_COLLECTION)
+            .collection(GAME_COLLECTION)
             .whereEqualTo(USER_ID, oldUserId)
             .get()
             .addOnFailureListener { error -> onResult(error) }
@@ -105,7 +105,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
     }
 
     companion object {
-        private const val TASK_COLLECTION = "Task"
+        private const val GAME_COLLECTION = "Game"
         private const val USER_ID = "userId"
     }
 }

@@ -1,8 +1,8 @@
-package com.group3.project2.screens.tasks
+package com.group3.project2.screens.lobby
 
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
-import com.group3.project2.EDIT_TASK_SCREEN
+import com.group3.project2.NEW_GAME_SCREEN
 import com.group3.project2.SETTINGS_SCREEN
 import com.group3.project2.TASK_ID
 import com.group3.project2.model.Task
@@ -43,13 +43,13 @@ class LobbyViewModel @Inject constructor(
         }
     }
 
-    fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)
+    fun onAddClick(openScreen: (String) -> Unit) = openScreen(NEW_GAME_SCREEN)
 
     fun onSettingsClick(openScreen: (String) -> Unit) = openScreen(SETTINGS_SCREEN)
 
     fun onTaskActionClick(openScreen: (String) -> Unit, task: Task, action: String) {
         when (GameActionOption.getByTitle(action)) {
-            GameActionOption.EditGame -> openScreen("$EDIT_TASK_SCREEN?$TASK_ID={${task.id}}")
+            GameActionOption.EditGame -> openScreen("$NEW_GAME_SCREEN?$TASK_ID={${task.id}}")
             GameActionOption.ToggleFlag -> onFlagTaskClick(task)
             GameActionOption.DeleteGame -> onDeleteTaskClick(task)
         }

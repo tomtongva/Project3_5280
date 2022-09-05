@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.LOGIN_SCREEN
 import com.group3.project2.SIGN_UP_SCREEN
-import com.group3.project2.TASKS_SCREEN
+import com.group3.project2.LOBBY_SCREEN
 import com.group3.project2.R.string as AppText
 import com.group3.project2.common.ext.isValidEmail
 import com.group3.project2.common.snackbar.SnackbarManager
@@ -74,7 +74,7 @@ class LoginViewModel @Inject constructor(
 
             storageService.updateUserId(oldUserId, newUserId) { error ->
                 if (error != null) logService.logNonFatalCrash(error)
-                else openAndPopUp(TASKS_SCREEN, LOGIN_SCREEN)
+                else openAndPopUp(LOBBY_SCREEN, LOGIN_SCREEN)
             }
         }
     }

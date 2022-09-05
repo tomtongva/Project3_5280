@@ -3,6 +3,7 @@ package com.group3.project2.theme
 import androidx.compose.ui.graphics.Color
 
 val Black = Color.Black
+val White = Color.White
 val LightGray = Color.LightGray
 val DarkGray = Color.DarkGray
 val Blue = Color.Blue

@@ -1,4 +1,4 @@
-package com.group3.project2.screens.tasks
+package com.group3.project2.screens.lobby
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*

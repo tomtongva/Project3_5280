@@ -1,13 +1,12 @@
-package com.group3.project2.screens.tasks
+package com.group3.project2.screens.lobby
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.common.composable.ActionToolbar
@@ -25,13 +24,15 @@ fun LobbyScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
+                text = { Text(stringResource(AppText.new_game)) },
                 onClick = { viewModel.onAddClick(openScreen) },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary,
                 modifier = modifier.padding(16.dp)
-            ) { Icon(Icons.Filled.Add, "Add") }
-        }
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Center
     ) {
         val tasks = viewModel.tasks
 
