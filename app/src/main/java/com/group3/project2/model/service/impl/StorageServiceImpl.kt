@@ -64,7 +64,7 @@ class StorageServiceImpl @Inject constructor() : StorageService {
         Firebase.firestore
             .collection(GAME_COLLECTION)
             .document(game.hostId)
-            .set(game)
+            .update( "guestId", game.guestId)
             .addOnCompleteListener { onResult(it.exception) }
     }
 

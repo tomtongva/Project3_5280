@@ -22,6 +22,7 @@ class GameViewModel @Inject constructor(
 ) : UnoViewModel(logService) {
     var game = mutableStateOf(Game())
         private set
+    val currentUser = accountService.getUserId()
 
     fun initialize(gameId: String) {
         viewModelScope.launch(showErrorExceptionHandler) {
@@ -42,9 +43,6 @@ class GameViewModel @Inject constructor(
             if (error == null) popUpScreen() else onError(error)
         }
     }
-
-
-
     private fun updateGame(game: Game) {
         storageService.updateGame(game) { error ->
             if (error == null) else onError(error)

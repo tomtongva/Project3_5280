@@ -2,10 +2,7 @@ package com.group3.project2.screens.lobby
 
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
-import com.group3.project2.GAME_ID
-import com.group3.project2.GAME_SCREEN
-import com.group3.project2.NEW_GAME_SCREEN
-import com.group3.project2.SETTINGS_SCREEN
+import com.group3.project2.*
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
 import com.group3.project2.model.service.LogService
@@ -39,8 +36,20 @@ class LobbyViewModel @Inject constructor(
     fun onSettingsClick(openScreen: (String) -> Unit) = openScreen(SETTINGS_SCREEN)
 
     fun onGameClick(openScreen: (String) -> Unit, game: Game) {
-        openScreen("$GAME_SCREEN?$GAME_ID={${game.hostId}}")
+        viewModelScope.launch(showErrorExceptionHandler) {
+            val editedGame = game.copy(guestId = accountService.getUserId())
+            updateGame(editedGame, openScreen)
+        }
     }
+
+    private fun updateGame(game: Game, openScreen: (String) -> Unit) {
+        storageService.updateGame(game) { error ->
+            if (error == null) {
+                openScreen("$GAME_SCREEN?$GAME_ID={${game.hostId}}")
+            } else onError(error)
+        }
+    }
+
 
     private fun onDocumentEvent(wasDocumentDeleted: Boolean, game: Game) {
         if (wasDocumentDeleted) games.remove(game.hostId) else games[game.hostId] = game
