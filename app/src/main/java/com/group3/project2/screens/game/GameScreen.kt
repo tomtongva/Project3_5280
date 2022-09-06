@@ -22,6 +22,8 @@ import com.group3.project2.common.ext.playableCard
 import com.group3.project2.common.ext.toolbarActions
 import com.group3.project2.model.Card
 import com.group3.project2.screens.lobby.GameItem
+import com.group3.project2.theme.Yellow
+import com.group3.project2.theme.cardYellow
 import com.group3.project2.R.string as AppText
 
 @ExperimentalMaterialApi
@@ -38,37 +40,51 @@ fun GameScreen(
         viewModel.initialize(gameId)
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ActionToolbar(
-            title = game.title.uppercase(),
-            modifier = Modifier.toolbarActions(),
-            endActionIcon = R.drawable.ic_exit,
-            endAction = { viewModel.onDoneClick(popUpScreen) }
-        )
+    if (!game.cards.isEmpty()) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Spacer(Modifier.height(40.0.dp))
+            ActionToolbar(
+                title = game.title.uppercase(),
+                modifier = Modifier.toolbarActions(),
+                endActionIcon = R.drawable.ic_exit,
 
-        if (!game.cards.isEmpty()) {
+                endAction = { viewModel.onDoneClick(popUpScreen) }
+            )
+
+            Spacer(Modifier.height(40.0.dp))
+
+            LazyRow {
+                items(game.guestHand.toList(), key = { it.id }) { cardItem ->
+                    CardInHand(
+                        card = cardItem,
+                        onClick = { },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(40.0.dp))
+
             PlayableCard(game.cards[0])
+
+            Spacer(Modifier.height(40.0.dp))
+
+            LazyRow {
+                items(game.hostHand.toList(), key = { it.id }) { cardItem ->
+                    CardInHand(
+                        card = cardItem,
+                        onClick = { },
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(40.0.dp))
         }
-
-        Spacer(Modifier.height(40.0.dp))
-
-//        LazyRow {
-//            items(tasks.values.toList(), key = { it.id }) { taskItem ->
-//                GameItem(
-//                    task = taskItem,
-//                    onClick = { viewModel.onGameClick(openScreen) },
-//                )
-//            }
-//        }
-
     }
 }
 
@@ -83,7 +99,7 @@ private fun PlayableCard(card: Card) {
     } else if (card.color == "green") {
         color = Color.Green
     } else if (card.color == "yellow") {
-        color = Color.Yellow
+        color = cardYellow
     } else if (card.color == "blue") {
         color = Color.Blue
     }
