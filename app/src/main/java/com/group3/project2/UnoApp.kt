@@ -112,6 +112,6 @@ fun NavGraphBuilder.unoGraph(appState: UnoAppState) {
     }
 
     composable(NEW_GAME_SCREEN) {
-        NewGameScreen(popUpScreen = { appState.popUp() })
+        NewGameScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
     }
 }

@@ -2,7 +2,7 @@ package com.group3.project2.screens.new_game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.group3.project2.GAME_DEFAULT_ID
+import com.group3.project2.*
 import com.group3.project2.common.ext.idFromParameter
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
@@ -28,6 +28,7 @@ class NewGameViewModel @Inject constructor(
     }
 
     private fun createDeck() {
+        // Create card deck
         var cards: MutableList<Card> = mutableListOf<Card>()
 
         val colors = arrayListOf("red", "green", "blue", "yellow")
@@ -44,20 +45,32 @@ class NewGameViewModel @Inject constructor(
             }
         }
         cards.shuffle()
-        game.value = game.value.copy(cards = cards)
+
+        // Deal 7 cards to each player
+        var hostHand: MutableList<Card> = mutableListOf<Card>()
+        var guestHand: MutableList<Card> = mutableListOf<Card>()
+
+        for (i in 1..7) {
+            hostHand.add(cards.removeLast())
+            guestHand.add(cards.removeLast())
+        }
+
+        game.value = game.value.copy(cards = cards, hostHand = hostHand, guestHand = guestHand)
     }
 
-    fun onDoneClick(popUpScreen: () -> Unit) {
+    fun onDoneClick(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             createDeck()
             val editedGame = game.value.copy(hostId = accountService.getUserId())
-            saveGame(editedGame, popUpScreen)
+            saveGame(editedGame, openAndPopUp)
         }
     }
 
-    private fun saveGame(game: Game, popUpScreen: () -> Unit) {
+    private fun saveGame(game: Game, openAndPopUp: (String, String) -> Unit) {
         storageService.saveGame(game) { error ->
-            if (error == null) popUpScreen() else onError(error)
+            if (error == null) {
+                openAndPopUp("$GAME_SCREEN?$GAME_ID={${game.hostId}}", NEW_GAME_SCREEN)
+            } else onError(error)
         }
     }
 }

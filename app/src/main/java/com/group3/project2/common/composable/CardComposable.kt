@@ -89,10 +89,9 @@ fun UnoCardEditor(
                 text = cardContent,
                 textAlign = TextAlign.Center,
                 color = Color.White,
-                fontSize = 50.sp,
+                fontSize = 40.sp,
                 modifier = Modifier
                     .padding(16.dp, 0.dp)
-
             )
         }
     }

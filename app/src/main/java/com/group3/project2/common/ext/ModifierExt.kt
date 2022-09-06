@@ -18,11 +18,11 @@ fun Modifier.card(): Modifier {
 }
 
 fun Modifier.playableCard(): Modifier {
-    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(150.dp).width(100.dp)
+    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(150.dp).width(110.dp)
 }
 
 fun Modifier.handCard(): Modifier {
-    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(90.dp).width(60.dp)
+    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(90.dp).width(65.dp)
 }
 
 fun Modifier.contextMenu(): Modifier {

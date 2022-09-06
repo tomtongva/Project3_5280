@@ -10,3 +10,4 @@ val Blue = Color.Blue
 val Red = Color.Red
 val Green = Color.Green
 val Yellow = Color.Yellow
+val cardYellow = Color(0xFFFFFF8D)

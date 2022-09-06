@@ -18,7 +18,7 @@ import com.group3.project2.R.string as AppText
 @Composable
 @ExperimentalMaterialApi
 fun NewGameScreen(
-    popUpScreen: () -> Unit,
+    openAndPopUp: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NewGameViewModel = hiltViewModel()
 ) {
@@ -35,7 +35,7 @@ fun NewGameScreen(
             title = AppText.new_game,
             modifier = Modifier.toolbarActions(),
             endActionIcon = AppIcon.ic_baseline_add_24,
-            endAction = { viewModel.onDoneClick(popUpScreen) }
+            endAction = { viewModel.onDoneClick(openAndPopUp) }
         )
 
         Spacer(modifier = Modifier.spacer())
