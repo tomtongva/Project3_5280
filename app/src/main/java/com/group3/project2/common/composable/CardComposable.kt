@@ -97,6 +97,16 @@ fun UnoCardEditor(
     }
 }
 
+@ExperimentalMaterialApi
+@Composable
+fun UnoCardBackEditor(
+    cardColor: Color,
+    modifier: Modifier
+) {
+    Card(backgroundColor = cardColor, modifier = modifier) {
+    }
+}
+
 
 @Composable
 @ExperimentalMaterialApi

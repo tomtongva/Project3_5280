@@ -55,7 +55,10 @@ class NewGameViewModel @Inject constructor(
             guestHand.add(cards.removeLast())
         }
 
-        game.value = game.value.copy(cards = cards, hostHand = hostHand, guestHand = guestHand)
+        var discardPile: MutableList<Card> = mutableListOf<Card>()
+        discardPile.add(cards.removeLast())
+
+        game.value = game.value.copy(cards = cards, hostHand = hostHand, guestHand = guestHand, discardPile = discardPile)
     }
 
     fun onDoneClick(openAndPopUp: (String, String) -> Unit) {

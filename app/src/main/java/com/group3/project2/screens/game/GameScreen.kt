@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.R
 import com.group3.project2.common.composable.*
+import com.group3.project2.common.ext.handCard
 import com.group3.project2.common.ext.playableCard
 import com.group3.project2.common.ext.toolbarActions
 import com.group3.project2.model.Card
@@ -35,55 +36,70 @@ fun GameScreen(
     viewModel: GameViewModel = hiltViewModel()
 ) {
     val game by viewModel.game
+    val currentUserID = viewModel.currentUser
 
     LaunchedEffect(Unit) {
         viewModel.initialize(gameId)
     }
 
-    if (!game.cards.isEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    if (game.hostId.isEmpty() || game.guestId.isEmpty()) {
+        Text("Waiting for opponent")
+    } else if (game.completed) {
+        //
+    } else {
+        if (!game.cards.isEmpty() && !game.discardPile.isEmpty()) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            ActionToolbar(
-                title = game.title.uppercase(),
-                modifier = Modifier.toolbarActions(),
-                endActionIcon = R.drawable.ic_exit,
+                ActionToolbar(
+                    title = game.title.uppercase(),
+                    modifier = Modifier.toolbarActions(),
+                    endActionIcon = R.drawable.ic_exit,
 
-                endAction = { viewModel.onDoneClick(popUpScreen) }
-            )
+                    endAction = { viewModel.onDoneClick(popUpScreen) }
+                )
 
-            Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(40.0.dp))
 
-            LazyRow {
-                items(game.guestHand.toList(), key = { it.id }) { cardItem ->
-                    CardInHand(
-                        card = cardItem,
-                        onClick = { },
-                    )
+                LazyRow {
+                    items(game.guestHand.toList(), key = { it.id }) { cardItem ->
+                        if (currentUserID.equals(game.guestId)) {
+                            CardInHand(
+                                card = cardItem,
+                                onClick = { },
+                            )
+                        } else {
+                            UnoCardBackEditor(cardColor = Color.DarkGray, modifier = Modifier.handCard())
+                        }
+                    }
                 }
-            }
 
-            Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(40.0.dp))
 
-            PlayableCard(game.cards[0])
+                PlayableCard(game.discardPile[0])
 
-            Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(40.0.dp))
 
-            LazyRow {
-                items(game.hostHand.toList(), key = { it.id }) { cardItem ->
-                    CardInHand(
-                        card = cardItem,
-                        onClick = { },
-                    )
+                LazyRow {
+                    items(game.hostHand.toList(), key = { it.id }) { cardItem ->
+                        if (currentUserID.equals(game.hostId)) {
+                            CardInHand(
+                                card = cardItem,
+                                onClick = { },
+                            )
+                        } else {
+                            UnoCardBackEditor(cardColor = Color.LightGray, modifier = Modifier.handCard())
+                        }
+                    }
                 }
-            }
 
-            Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(40.0.dp))
+            }
         }
     }
 }
