@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,13 +77,13 @@ fun UnoCardEditor(
     cardContent: String,
     cardColor: Color,
     modifier: Modifier,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
 ) {
     Card(backgroundColor = cardColor, modifier = modifier, onClick = onEditClick) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp)
         ) {
             Text(
                 text = cardContent,

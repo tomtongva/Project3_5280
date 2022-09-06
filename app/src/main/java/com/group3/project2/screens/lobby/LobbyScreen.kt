@@ -7,9 +7,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.common.composable.ActionToolbar
+import com.group3.project2.common.composable.BasicTextButton
+import com.group3.project2.common.ext.basicButton
 import com.group3.project2.common.ext.smallSpacer
 import com.group3.project2.common.ext.toolbarActions
 import com.group3.project2.R.drawable as AppIcon
@@ -34,9 +38,11 @@ fun LobbyScreen(
         },
         floatingActionButtonPosition = FabPosition.Center
     ) {
-        val tasks = viewModel.tasks
+        val games = viewModel.games
 
-        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()) {
             ActionToolbar(
                 title = AppText.lobby,
                 modifier = Modifier.toolbarActions(),
@@ -46,15 +52,19 @@ fun LobbyScreen(
 
             Spacer(modifier = Modifier.smallSpacer())
 
+            Text(
+                text = "Join a game below or create a new one!",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(16.dp)
+            )
+
+            Spacer(modifier = Modifier.smallSpacer())
+
             LazyColumn {
-                items(tasks.values.toList(), key = { it.id }) { taskItem ->
+                items(games.values.toList(), key = { it.hostId }) { gameItem ->
                     GameItem(
-                        task = taskItem,
-                        onClick = { viewModel.onGameClick(openScreen) },
-                        onCheckChange = { viewModel.onTaskCheckChange(taskItem) },
-                        onActionClick = { action ->
-                            viewModel.onTaskActionClick(openScreen, taskItem, action)
-                        }
+                        game = gameItem,
+                        onClick = { viewModel.onGameClick(openScreen, gameItem) },
                     )
                 }
             }

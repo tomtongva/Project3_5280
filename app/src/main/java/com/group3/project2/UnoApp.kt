@@ -101,17 +101,17 @@ fun NavGraphBuilder.unoGraph(appState: UnoAppState) {
         LobbyScreen(openScreen = { route -> appState.navigate(route) })
     }
 
-    composable(GAME_SCREEN) {
-        GameScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+    composable(
+        route = "$GAME_SCREEN$GAME_ID_ARG",
+        arguments = listOf(navArgument(GAME_ID) { defaultValue = GAME_DEFAULT_ID })
+    ) {
+        GameScreen(
+            popUpScreen = { appState.popUp() },
+            gameId = it.arguments?.getString(GAME_ID) ?: GAME_DEFAULT_ID
+        )
     }
 
-    composable(
-        route = "$NEW_GAME_SCREEN$TASK_ID_ARG",
-        arguments = listOf(navArgument(TASK_ID) { defaultValue = TASK_DEFAULT_ID })
-    ) {
-        NewGameScreen(
-            popUpScreen = { appState.popUp() },
-            taskId = it.arguments?.getString(TASK_ID) ?: TASK_DEFAULT_ID
-        )
+    composable(NEW_GAME_SCREEN) {
+        NewGameScreen(popUpScreen = { appState.popUp() })
     }
 }

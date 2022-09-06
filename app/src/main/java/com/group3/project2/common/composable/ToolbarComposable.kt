@@ -20,6 +20,14 @@ fun BasicToolbar(@StringRes title: Int) {
 }
 
 @Composable
+fun BasicToolbar(title: String) {
+    TopAppBar(
+        title = { Text(title) },
+        backgroundColor = toolbarColor()
+    )
+}
+
+@Composable
 fun ActionToolbar(
     @StringRes title: Int,
     @DrawableRes endActionIcon: Int,
@@ -28,6 +36,26 @@ fun ActionToolbar(
 ) {
     TopAppBar(
         title = { Text(stringResource(title)) },
+        backgroundColor = toolbarColor(),
+        actions = {
+            Box(modifier) {
+                IconButton(onClick = endAction) {
+                    Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun ActionToolbar(
+    title: String,
+    @DrawableRes endActionIcon: Int,
+    modifier: Modifier,
+    endAction: () -> Unit
+) {
+    TopAppBar(
+        title = { Text(title) },
         backgroundColor = toolbarColor(),
         actions = {
             Box(modifier) {

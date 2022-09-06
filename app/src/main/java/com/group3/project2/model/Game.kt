@@ -1,11 +1,12 @@
 package com.group3.project2.model
 
-data class Game(
-    val id: String = "",
+data class Game (
     val title: String = "",
-    val host: User,
-    val guest: User,
-    val createdAt: String = "",
+    val hostId: String = "",
+    val guestId: String = "",
     val started: Boolean = false,
-    val completed: Boolean = false
+    val completed: Boolean = false,
+    val cards: MutableList<Card> = mutableListOf<Card>(),
+    val hostHand: MutableList<Card> = mutableListOf<Card>(),
+    val guestHand: MutableList<Card> = mutableListOf<Card>(),
 )
