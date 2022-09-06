@@ -2,17 +2,16 @@ package com.group3.project2.screens.new_game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.group3.project2.TASK_DEFAULT_ID
+import com.group3.project2.GAME_DEFAULT_ID
 import com.group3.project2.common.ext.idFromParameter
-import com.group3.project2.model.Task
+import com.group3.project2.model.Card
+import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
 import com.group3.project2.model.service.LogService
 import com.group3.project2.model.service.StorageService
 import com.group3.project2.screens.UnoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,79 +20,44 @@ class NewGameViewModel @Inject constructor(
     private val storageService: StorageService,
     private val accountService: AccountService
 ) : UnoViewModel(logService) {
-    var task = mutableStateOf(Task())
+    var game = mutableStateOf(Game())
         private set
 
-    fun initialize(taskId: String) {
-        viewModelScope.launch(showErrorExceptionHandler) {
-            if (taskId != TASK_DEFAULT_ID) {
-                storageService.getTask(taskId.idFromParameter(), ::onError) {
-                    task.value = it
+    fun onTitleChange(newValue: String) {
+        game.value = game.value.copy(title = newValue)
+    }
+
+    private fun createDeck() {
+        var cards: MutableList<Card> = mutableListOf<Card>()
+
+        val colors = arrayListOf("red", "green", "blue", "yellow")
+
+        for (color in colors) {
+            for (i in 0..11) {
+                var content = i.toString()
+                if (i == 10) {
+                    content = "S"
+                } else if (i == 11) {
+                    content = "+4"
                 }
+                cards.add(Card(id = content + color, content = content, color = color))
             }
         }
-    }
-
-    fun onTitleChange(newValue: String) {
-        task.value = task.value.copy(title = newValue)
-    }
-
-    fun onDescriptionChange(newValue: String) {
-        task.value = task.value.copy(description = newValue)
-    }
-
-    fun onUrlChange(newValue: String) {
-        task.value = task.value.copy(url = newValue)
-    }
-
-    fun onDateChange(newValue: Long) {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone(UTC))
-        calendar.timeInMillis = newValue
-        val newDueDate = SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH).format(calendar.time)
-        task.value = task.value.copy(dueDate = newDueDate)
-    }
-
-    fun onTimeChange(hour: Int, minute: Int) {
-        val newDueTime = "${hour.toClockPattern()}:${minute.toClockPattern()}"
-        task.value = task.value.copy(dueTime = newDueTime)
-    }
-
-    fun onFlagToggle(newValue: String)  {
-        val newFlagOption = EditFlagOption.getBooleanValue(newValue)
-        task.value = task.value.copy(flag = newFlagOption)
-    }
-
-    fun onPriorityChange(newValue: String) {
-        task.value = task.value.copy(priority = newValue)
+        cards.shuffle()
+        game.value = game.value.copy(cards = cards)
     }
 
     fun onDoneClick(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            val editedTask = task.value.copy(userId = accountService.getUserId())
-
-            if (editedTask.id.isBlank()) saveTask(editedTask, popUpScreen)
-            else updateTask(editedTask, popUpScreen)
+            createDeck()
+            val editedGame = game.value.copy(hostId = accountService.getUserId())
+            saveGame(editedGame, popUpScreen)
         }
     }
 
-    private fun saveTask(task: Task, popUpScreen: () -> Unit) {
-        storageService.saveTask(task) { error ->
+    private fun saveGame(game: Game, popUpScreen: () -> Unit) {
+        storageService.saveGame(game) { error ->
             if (error == null) popUpScreen() else onError(error)
         }
-    }
-
-    private fun updateTask(task: Task, popUpScreen: () -> Unit) {
-        storageService.updateTask(task) { error ->
-            if (error == null) popUpScreen() else onError(error)
-        }
-    }
-
-    private fun Int.toClockPattern(): String {
-        return if (this < 10) "0$this" else "$this"
-    }
-
-    companion object {
-        private const val UTC = "UTC"
-        private const val DATE_FORMAT = "EEE, d MMM yyyy"
     }
 }
