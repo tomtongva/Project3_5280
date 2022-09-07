@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.R
 import com.group3.project2.common.composable.*
+import com.group3.project2.common.ext.basicButton
 import com.group3.project2.common.ext.handCard
 import com.group3.project2.common.ext.playableCard
 import com.group3.project2.common.ext.toolbarActions
@@ -32,7 +33,7 @@ fun GameScreen(
     viewModel: GameViewModel = hiltViewModel()
 ) {
     val game by viewModel.game
-    val currentUserID = viewModel.currentUser
+    val currentUserIsHost: Boolean = viewModel.currentUser == game.hostId
 
     LaunchedEffect(Unit) {
         viewModel.initialize(gameId)
@@ -70,7 +71,7 @@ fun GameScreen(
                 Spacer(Modifier.height(40.0.dp))
 
                 LazyRow {
-                    if (currentUserID.equals(game.hostId)) {
+                    if (currentUserIsHost) {
                         items(game.guestHand.toList(), key = { it.id }) { cardItem ->
                             UnoCardBackEditor(
                                 cardColor = Color.DarkGray,
@@ -91,23 +92,27 @@ fun GameScreen(
 
                 PlayableCard(game.discardPile[0])
 
+                Spacer(Modifier.height(10.0.dp))
+
+                BasicButton(AppText.drawCard, Modifier.basicButton()) {
+                    viewModel.onDrawCardClick(currentUserIsHost)
+                }
+
                 Spacer(Modifier.height(40.0.dp))
 
                 LazyRow {
-                    if (currentUserID.equals(game.hostId)) {
-                        val hostHand = true
+                    if (currentUserIsHost) {
                         items(game.hostHand.toList(), key = { it.id }) { cardItem ->
                             CardInHand(
                                 card = cardItem,
-                                onClick = { viewModel.onCardClick(cardItem, hostHand) },
+                                onClick = { viewModel.onCardClick(cardItem, currentUserIsHost) },
                             )
                         }
                     } else {
-                        val hostHand = false
                         items(game.guestHand.toList(), key = { it.id }) { cardItem ->
                             CardInHand(
                                 card = cardItem,
-                                onClick = { viewModel.onCardClick(cardItem, hostHand) }
+                                onClick = { viewModel.onCardClick(cardItem, currentUserIsHost) }
                             )
                         }
                     }

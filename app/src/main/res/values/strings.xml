@@ -33,6 +33,9 @@
     <string name="flag">Flag</string>
     <string name="priority">Priority</string>
 
+    <!-- GameScreen -->
+    <string name="drawCard">DRAW CARD</string>
+
     <!-- SettingsScreen -->
     <string name="settings">SETTINGS</string>
     <string name="sign_out">SIGN OUT</string>

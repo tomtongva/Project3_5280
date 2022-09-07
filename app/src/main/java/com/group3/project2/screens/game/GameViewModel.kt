@@ -79,6 +79,22 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    fun onDrawCardClick(hostHand: Boolean) {
+        viewModelScope.launch(showErrorExceptionHandler) {
+            var editedGame = game.value.copy()
+            val drawnCard = editedGame.cards.removeLast()
+
+            if (hostHand && game.value.hostsMove) {
+                editedGame.hostHand.add(0, drawnCard)
+                editedGame.hostsMove = false
+            } else if (!hostHand && !game.value.hostsMove) {
+                editedGame.guestHand.add(0, drawnCard)
+                editedGame.hostsMove = true
+            }
+            saveGame(editedGame)
+        }
+    }
+
     fun onExitClick(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             popUpScreen()

@@ -116,11 +116,6 @@ fun UnoCardEditor(
                     fontSize = 40.sp
                 )
             }
-
-
-
-
-
         }
     }
 }
@@ -134,7 +129,6 @@ fun UnoCardBackEditor(
     Card(backgroundColor = cardColor, modifier = modifier) {
     }
 }
-
 
 @Composable
 @ExperimentalMaterialApi
