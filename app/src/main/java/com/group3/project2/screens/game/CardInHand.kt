@@ -15,7 +15,7 @@ fun CardInHand(
     card: Card,
     onClick: () -> Unit,
 ) {
-    var color = Color.Red
+    var color = Color.Black
     if (card.color == "red") {
         color = Color.Red
     } else if (card.color == "green") {
@@ -26,7 +26,10 @@ fun CardInHand(
         color = Color.Blue
     }
 
-    UnoCardEditor(cardContent = card.content, cardColor = color, modifier = Modifier.handCard()) {
-
-    }
+    UnoCardEditor(
+        cardContent = card.content,
+        cardColor = color,
+        modifier = Modifier.handCard(),
+        onEditClick = onClick
+    )
 }

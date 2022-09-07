@@ -22,7 +22,7 @@ fun Modifier.playableCard(): Modifier {
 }
 
 fun Modifier.handCard(): Modifier {
-    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(90.dp).width(65.dp)
+    return this.padding(5.dp, 5.dp, 5.dp, 5.dp).height(105.dp).width(75.dp)
 }
 
 fun Modifier.contextMenu(): Modifier {

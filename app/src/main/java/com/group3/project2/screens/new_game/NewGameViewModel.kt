@@ -35,13 +35,15 @@ class NewGameViewModel @Inject constructor(
 
         for (color in colors) {
             for (i in 0..11) {
+                var colorEdit = color
                 var content = i.toString()
                 if (i == 10) {
                     content = "S"
                 } else if (i == 11) {
                     content = "+4"
+                    colorEdit = ""
                 }
-                cards.add(Card(id = content + color, content = content, color = color))
+                cards.add(Card(id = content + color, content = content, color = colorEdit))
             }
         }
         cards.shuffle()

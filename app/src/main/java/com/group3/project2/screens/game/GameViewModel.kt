@@ -1,5 +1,6 @@
 package com.group3.project2.screens.game
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.*
@@ -32,21 +33,69 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun onDoneClick(popUpScreen: () -> Unit) {
+    fun addListener() {
+        viewModelScope.launch(showErrorExceptionHandler) {
+            storageService.addListener(::onDocumentEvent, ::onError)
+        }
+    }
+
+    fun removeListener() {
+        viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
+    }
+
+    fun onCardClick(card: Card, hostHand: Boolean) {
+        viewModelScope.launch(showErrorExceptionHandler) {
+            var editedGame = game.value.copy()
+
+            if (hostHand && game.value.hostsMove) {
+                if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                    editedGame.hostHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.hostsMove = false
+                } else if (card.content == "+4") {
+                    editedGame.hostHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.hostsMove = false
+                } else {
+
+                }
+            } else if (!hostHand && !game.value.hostsMove) {
+                if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                    editedGame.guestHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.hostsMove = true
+                } else if (card.content == "+4") {
+                    editedGame.guestHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.hostsMove = true
+                } else {
+
+                }
+            } else {
+
+            }
+
+            saveGame(editedGame)
+        }
+    }
+
+    fun onExitClick(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             popUpScreen()
         }
     }
 
-    private fun saveGame(game: Game, popUpScreen: () -> Unit) {
+    private fun saveGame(game: Game) {
         storageService.saveGame(game) { error ->
-            if (error == null) popUpScreen() else onError(error)
-        }
-    }
-    private fun updateGame(game: Game) {
-        storageService.updateGame(game) { error ->
             if (error == null) else onError(error)
         }
     }
 
+    private fun onDocumentEvent(wasDocumentDeleted: Boolean, gameNew: Game) {
+        if (wasDocumentDeleted) {
+            //games.remove(game.hostId)
+        } else {
+            game.value = gameNew
+        }
+    }
 }

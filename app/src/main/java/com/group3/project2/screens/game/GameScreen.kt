@@ -1,8 +1,6 @@
 package com.group3.project2.screens.game
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -22,8 +20,6 @@ import com.group3.project2.common.ext.handCard
 import com.group3.project2.common.ext.playableCard
 import com.group3.project2.common.ext.toolbarActions
 import com.group3.project2.model.Card
-import com.group3.project2.screens.lobby.GameItem
-import com.group3.project2.theme.Yellow
 import com.group3.project2.theme.cardYellow
 import com.group3.project2.R.string as AppText
 
@@ -60,21 +56,33 @@ fun GameScreen(
                     title = game.title.uppercase(),
                     modifier = Modifier.toolbarActions(),
                     endActionIcon = R.drawable.ic_exit,
+                    endAction = { viewModel.onExitClick(popUpScreen) }
+                )
 
-                    endAction = { viewModel.onDoneClick(popUpScreen) }
+                Text(
+                    text = if (game.hostsMove) {
+                        "hosts turn"
+                    } else {
+                        "guests turn"
+                    }
                 )
 
                 Spacer(Modifier.height(40.0.dp))
 
                 LazyRow {
-                    items(game.guestHand.toList(), key = { it.id }) { cardItem ->
-                        if (currentUserID.equals(game.guestId)) {
-                            CardInHand(
-                                card = cardItem,
-                                onClick = { },
+                    if (currentUserID.equals(game.hostId)) {
+                        items(game.guestHand.toList(), key = { it.id }) { cardItem ->
+                            UnoCardBackEditor(
+                                cardColor = Color.DarkGray,
+                                modifier = Modifier.handCard()
                             )
-                        } else {
-                            UnoCardBackEditor(cardColor = Color.DarkGray, modifier = Modifier.handCard())
+                        }
+                    } else {
+                        items(game.hostHand.toList(), key = { it.id }) { cardItem ->
+                            UnoCardBackEditor(
+                                cardColor = Color.DarkGray,
+                                modifier = Modifier.handCard()
+                            )
                         }
                     }
                 }
@@ -86,14 +94,21 @@ fun GameScreen(
                 Spacer(Modifier.height(40.0.dp))
 
                 LazyRow {
-                    items(game.hostHand.toList(), key = { it.id }) { cardItem ->
-                        if (currentUserID.equals(game.hostId)) {
+                    if (currentUserID.equals(game.hostId)) {
+                        val hostHand = true
+                        items(game.hostHand.toList(), key = { it.id }) { cardItem ->
                             CardInHand(
                                 card = cardItem,
-                                onClick = { },
+                                onClick = { viewModel.onCardClick(cardItem, hostHand) },
                             )
-                        } else {
-                            UnoCardBackEditor(cardColor = Color.LightGray, modifier = Modifier.handCard())
+                        }
+                    } else {
+                        val hostHand = false
+                        items(game.guestHand.toList(), key = { it.id }) { cardItem ->
+                            CardInHand(
+                                card = cardItem,
+                                onClick = { viewModel.onCardClick(cardItem, hostHand) }
+                            )
                         }
                     }
                 }
@@ -102,6 +117,11 @@ fun GameScreen(
             }
         }
     }
+
+    DisposableEffect(viewModel) {
+        viewModel.addListener()
+        onDispose { viewModel.removeListener() }
+    }
 }
 
 @ExperimentalMaterialApi
@@ -109,7 +129,7 @@ fun GameScreen(
 private fun PlayableCard(card: Card) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
-    var color = Color.Red
+    var color: Color = Color.Black
     if (card.color == "red") {
         color = Color.Red
     } else if (card.color == "green") {
