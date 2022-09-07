@@ -41,7 +41,7 @@ fun GameScreen(
 
     if (game.hostId.isEmpty() || game.guestId.isEmpty()) {
         Text("Waiting for opponent")
-    } else if (game.completed) {
+    } else if (game.gameOver) {
         //
     } else {
         if (!game.cards.isEmpty() && !game.discardPile.isEmpty()) {
