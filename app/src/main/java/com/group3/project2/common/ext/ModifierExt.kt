@@ -10,7 +10,7 @@ fun Modifier.textButton(): Modifier {
 }
 
 fun Modifier.basicButton(): Modifier {
-    return this.fillMaxWidth().padding(16.dp, 8.dp)
+    return this.fillMaxWidth().padding(8.dp, 8.dp)
 }
 
 fun Modifier.card(): Modifier {
@@ -18,11 +18,11 @@ fun Modifier.card(): Modifier {
 }
 
 fun Modifier.playableCard(): Modifier {
-    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(150.dp).width(110.dp)
+    return this.padding(16.dp, 0.dp, 16.dp, 8.dp).height(180.dp).width(120.dp)
 }
 
 fun Modifier.handCard(): Modifier {
-    return this.padding(5.dp, 5.dp, 5.dp, 5.dp).height(105.dp).width(75.dp)
+    return this.padding(5.dp, 5.dp, 5.dp, 5.dp).height(100.dp).width(66.dp)
 }
 
 fun Modifier.contextMenu(): Modifier {

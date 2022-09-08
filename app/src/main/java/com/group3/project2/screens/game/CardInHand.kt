@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.group3.project2.common.composable.UnoCardEditor
 import com.group3.project2.common.ext.handCard
 import com.group3.project2.model.Card
-import com.group3.project2.theme.cardYellow
+import com.group3.project2.theme.*
 
 @Composable
 @ExperimentalMaterialApi
@@ -15,15 +15,15 @@ fun CardInHand(
     card: Card,
     onClick: () -> Unit,
 ) {
-    var color = Color.Black
+    var color: Color = Color.Black
     if (card.color == "red") {
-        color = Color.Red
+        color = Red
     } else if (card.color == "green") {
-        color = Color.Green
+        color = Green
     } else if (card.color == "yellow") {
-        color = cardYellow
+        color = Yellow
     } else if (card.color == "blue") {
-        color = Color.Blue
+        color = Blue
     }
 
     UnoCardEditor(

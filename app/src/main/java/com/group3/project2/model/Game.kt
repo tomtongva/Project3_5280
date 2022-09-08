@@ -7,6 +7,7 @@ data class Game (
     val gameStarted: Boolean = false,
     val gameOver: Boolean = false,
     var hostsMove: Boolean = true,
+    var nextMove: Boolean = false,
     val cards: MutableList<Card> = mutableListOf<Card>(),
     val discardPile: MutableList<Card> = mutableListOf<Card>(),
     val hostHand: MutableList<Card> = mutableListOf<Card>(),
