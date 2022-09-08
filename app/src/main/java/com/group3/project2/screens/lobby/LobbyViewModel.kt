@@ -37,8 +37,12 @@ class LobbyViewModel @Inject constructor(
 
     fun onGameClick(openScreen: (String) -> Unit, game: Game) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            val editedGame = game.copy(guestId = accountService.getUserId())
-            updateGame(editedGame, openScreen)
+            if (accountService.getUserId() != game.hostId) {
+                val editedGame = game.copy(guestId = accountService.getUserId())
+                updateGame(editedGame, openScreen)
+            } else {
+
+            }
         }
     }
 

@@ -104,27 +104,43 @@ class GameViewModel @Inject constructor(
     fun onDrawCardClick(hostHand: Boolean) {
         viewModelScope.launch(showErrorExceptionHandler) {
             var editedGame = game.value.copy()
-            val drawnCard = editedGame.cards.removeLast()
+
+            val drawnCard: Card
+
+            if (editedGame.cards.size == 1) {
+                drawnCard = editedGame.cards[0]
+                val placeholderCard = editedGame.discardPile.removeAt(0)
+                editedGame.cards.addAll(editedGame.discardPile)
+                editedGame.discardPile.removeAll(editedGame.discardPile)
+                editedGame.discardPile.add(placeholderCard)
+                editedGame.cards.shuffle()
+            } else {
+                drawnCard = editedGame.cards.removeLast()
+            }
 
             if (drawnCard.content == game.value.discardPile[0].content || drawnCard.color == game.value.discardPile[0].color) {
                 editedGame.discardPile.add(0, drawnCard)
+                if (drawnCard.content != "S") {
+                    editedGame.hostsMove = !editedGame.hostsMove
+                }
             } else if (hostHand && game.value.hostsMove) {
                 editedGame.hostHand.add(0, drawnCard)
+                editedGame.hostsMove = !editedGame.hostsMove
             } else if (!hostHand && !game.value.hostsMove) {
                 editedGame.guestHand.add(0, drawnCard)
+                editedGame.hostsMove = !editedGame.hostsMove
             }
 
             editedGame.nextMove = !editedGame.nextMove
-
-            if (drawnCard.content != "S") {
-                editedGame.hostsMove = !editedGame.hostsMove
-            }
             saveGame(editedGame)
         }
     }
 
     fun onExitClick(popUpScreen: () -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
+            var editedGame = game.value.copy()
+            editedGame.gameOver = true
+            saveGame(editedGame)
             popUpScreen()
         }
     }

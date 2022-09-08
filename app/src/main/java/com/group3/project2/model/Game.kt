@@ -5,7 +5,7 @@ data class Game (
     val hostId: String = "",
     val guestId: String = "",
     val gameStarted: Boolean = false,
-    val gameOver: Boolean = false,
+    var gameOver: Boolean = false,
     var hostsMove: Boolean = true,
     var nextMove: Boolean = false,
     val cards: MutableList<Card> = mutableListOf<Card>(),
