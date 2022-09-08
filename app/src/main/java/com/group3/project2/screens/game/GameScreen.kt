@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.R
 import com.group3.project2.common.composable.*
@@ -21,7 +23,7 @@ import com.group3.project2.common.ext.handCard
 import com.group3.project2.common.ext.playableCard
 import com.group3.project2.common.ext.toolbarActions
 import com.group3.project2.model.Card
-import com.group3.project2.theme.cardYellow
+import com.group3.project2.theme.*
 import com.group3.project2.R.string as AppText
 
 @ExperimentalMaterialApi
@@ -60,15 +62,7 @@ fun GameScreen(
                     endAction = { viewModel.onExitClick(popUpScreen) }
                 )
 
-                Text(
-                    text = if (game.hostsMove) {
-                        "hosts turn"
-                    } else {
-                        "guests turn"
-                    }
-                )
-
-                Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(20.0.dp))
 
                 LazyRow {
                     if (currentUserIsHost) {
@@ -88,17 +82,17 @@ fun GameScreen(
                     }
                 }
 
-                Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(20.0.dp))
 
                 PlayableCard(game.discardPile[0])
 
-                Spacer(Modifier.height(10.0.dp))
+                Spacer(Modifier.height(2.dp))
 
                 BasicButton(AppText.drawCard, Modifier.basicButton()) {
                     viewModel.onDrawCardClick(currentUserIsHost)
                 }
 
-                Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(12.0.dp))
 
                 LazyRow {
                     if (currentUserIsHost) {
@@ -118,7 +112,21 @@ fun GameScreen(
                     }
                 }
 
-                Spacer(Modifier.height(40.0.dp))
+                Spacer(Modifier.height(20.0.dp))
+
+                if (currentUserIsHost && game.hostsMove) {
+                    Text(
+                        text = "Your turn!",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else if (!currentUserIsHost && !game.hostsMove) {
+                    Text(
+                        text = "Your turn!",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
@@ -136,13 +144,13 @@ private fun PlayableCard(card: Card) {
 
     var color: Color = Color.Black
     if (card.color == "red") {
-        color = Color.Red
+        color = Red
     } else if (card.color == "green") {
-        color = Color.Green
+        color = Green
     } else if (card.color == "yellow") {
-        color = cardYellow
+        color = Yellow
     } else if (card.color == "blue") {
-        color = Color.Blue
+        color = Blue
     }
 
     UnoCardEditor(cardContent = card.content, cardColor = color, modifier = Modifier.playableCard()) {

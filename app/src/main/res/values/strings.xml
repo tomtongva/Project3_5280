@@ -17,7 +17,7 @@
 
     <!-- SignUpScreen -->
     <string name="create_account">CREATE ACCOUNT</string>
-    <string name="password_error">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="password_error">Your password should have at least six digits.</string>
     <string name="password_match_error">Passwords do not match.</string>
 
     <!-- LobbyScreen -->
@@ -35,6 +35,8 @@
 
     <!-- GameScreen -->
     <string name="drawCard">DRAW CARD</string>
+    <string name="wrongTurn">It\'s not your turn, please wait for the other player.</string>
+    <string name="invalidMove">Invalid move. Please play a card of the same color, same number, or a draw 4. Otherwise draw a card.</string>
 
     <!-- SettingsScreen -->
     <string name="settings">SETTINGS</string>

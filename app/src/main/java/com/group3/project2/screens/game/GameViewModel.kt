@@ -1,10 +1,10 @@
 package com.group3.project2.screens.game
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.group3.project2.*
+import com.group3.project2.R
 import com.group3.project2.common.ext.idFromParameter
+import com.group3.project2.common.snackbar.SnackbarManager
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
@@ -48,31 +48,53 @@ class GameViewModel @Inject constructor(
             var editedGame = game.value.copy()
 
             if (hostHand && game.value.hostsMove) {
-                if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                if (card.content == "+4") {
                     editedGame.hostHand.remove(card)
-                    editedGame.discardPile.add(0, card)
-                    editedGame.hostsMove = false
-                } else if (card.content == "+4") {
-                    editedGame.hostHand.remove(card)
-                    editedGame.discardPile.add(0, card)
-                    editedGame.hostsMove = false
-                } else {
+                    var editedCard = card
+                    editedCard.color = "red"
+                    editedGame.discardPile.add(0, editedCard)
 
+                    for(i in 0..3) {
+                        editedGame.guestHand.add(0, editedGame.cards.removeLast())
+                    }
+
+                    editedGame.hostsMove = false
+                } else if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                    editedGame.hostHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.nextMove = !editedGame.nextMove
+
+                    if (card.content != "S") {
+                        editedGame.hostsMove = false
+                    }
+                } else {
+                    SnackbarManager.showMessage(R.string.invalidMove)
                 }
             } else if (!hostHand && !game.value.hostsMove) {
-                if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                if (card.content == "+4") {
                     editedGame.guestHand.remove(card)
-                    editedGame.discardPile.add(0, card)
-                    editedGame.hostsMove = true
-                } else if (card.content == "+4") {
-                    editedGame.guestHand.remove(card)
-                    editedGame.discardPile.add(0, card)
-                    editedGame.hostsMove = true
-                } else {
+                    var editedCard = card
+                    editedCard.color = "red"
+                    editedGame.discardPile.add(0, editedCard)
 
+                    for(i in 0..3) {
+                        editedGame.hostHand.add(0, editedGame.cards.removeLast())
+                    }
+
+                    editedGame.hostsMove = true
+                } else if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
+                    editedGame.guestHand.remove(card)
+                    editedGame.discardPile.add(0, card)
+                    editedGame.nextMove = !editedGame.nextMove
+
+                    if (card.content != "S") {
+                        editedGame.hostsMove = true
+                    }
+                } else {
+                    SnackbarManager.showMessage(R.string.invalidMove)
                 }
             } else {
-
+                SnackbarManager.showMessage(R.string.wrongTurn)
             }
 
             saveGame(editedGame)
@@ -84,12 +106,18 @@ class GameViewModel @Inject constructor(
             var editedGame = game.value.copy()
             val drawnCard = editedGame.cards.removeLast()
 
-            if (hostHand && game.value.hostsMove) {
+            if (drawnCard.content == game.value.discardPile[0].content || drawnCard.color == game.value.discardPile[0].color) {
+                editedGame.discardPile.add(0, drawnCard)
+            } else if (hostHand && game.value.hostsMove) {
                 editedGame.hostHand.add(0, drawnCard)
-                editedGame.hostsMove = false
             } else if (!hostHand && !game.value.hostsMove) {
                 editedGame.guestHand.add(0, drawnCard)
-                editedGame.hostsMove = true
+            }
+
+            editedGame.nextMove = !editedGame.nextMove
+
+            if (drawnCard.content != "S") {
+                editedGame.hostsMove = !editedGame.hostsMove
             }
             saveGame(editedGame)
         }
