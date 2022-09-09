@@ -1,5 +1,6 @@
 package com.group3.project2.screens.game
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -12,17 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.R
 import com.group3.project2.common.composable.*
-import com.group3.project2.common.ext.basicButton
-import com.group3.project2.common.ext.handCard
-import com.group3.project2.common.ext.playableCard
-import com.group3.project2.common.ext.toolbarActions
+import com.group3.project2.common.ext.*
 import com.group3.project2.model.Card
+import com.group3.project2.model.Game
 import com.group3.project2.theme.*
 import com.group3.project2.R.string as AppText
 
@@ -41,10 +41,40 @@ fun GameScreen(
         viewModel.initialize(gameId)
     }
 
+    deleteGame {
+        viewModel.onExitClick(popUpScreen)
+    }
+
+    BasicToolbar(
+        title = game.title.uppercase()
+    )
+
     if (game.hostId.isEmpty() || game.guestId.isEmpty()) {
-        Text("Waiting for opponent")
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Waiting for an opponent.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
     } else if (game.gameOver) {
-        //
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Opponent quit game.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
     } else {
         if (!game.cards.isEmpty() && !game.discardPile.isEmpty()) {
             Column(
@@ -52,16 +82,9 @@ fun GameScreen(
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                ActionToolbar(
-                    title = game.title.uppercase(),
-                    modifier = Modifier.toolbarActions(),
-                    endActionIcon = R.drawable.ic_exit,
-                    endAction = { viewModel.onExitClick(popUpScreen) }
-                )
-
                 Spacer(Modifier.height(20.0.dp))
 
                 LazyRow {
@@ -140,9 +163,8 @@ fun GameScreen(
 @ExperimentalMaterialApi
 @Composable
 private fun PlayableCard(card: Card) {
-    var showWarningDialog by remember { mutableStateOf(false) }
-
     var color: Color = Color.Black
+
     if (card.color == "red") {
         color = Red
     } else if (card.color == "green") {
@@ -154,17 +176,27 @@ private fun PlayableCard(card: Card) {
     }
 
     UnoCardEditor(cardContent = card.content, cardColor = color, modifier = Modifier.playableCard()) {
+        //
+    }
+}
 
+@ExperimentalMaterialApi
+@Composable
+private fun deleteGame(deleteGame: () -> Unit) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showWarningDialog = true
     }
 
     if(showWarningDialog) {
         AlertDialog(
-            title = { Text(stringResource(AppText.sign_out_title)) },
-            text = { Text(stringResource(AppText.sign_out_description)) },
+            title = { Text(stringResource(AppText.leaveGame)) },
+            text = { Text(stringResource(AppText.leaveGameDescription)) },
             dismissButton = { DialogCancelButton(AppText.cancel) { showWarningDialog = false } },
             confirmButton = {
-                DialogConfirmButton(AppText.sign_out) {
-                    //signOut()
+                DialogConfirmButton(AppText.endGame) {
+                    deleteGame()
                     showWarningDialog = false
                 }
             },

@@ -6,7 +6,7 @@
     <string name="repeat_password">Repeat password</string>
     <string name="generic_error">Something wrong happened. Please try again.</string>
     <string name="email_error">Please insert a valid email.</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">CANCEL</string>
 
     <!-- LoginScreen -->
     <string name="sign_in">SIGN IN</string>
@@ -37,6 +37,9 @@
     <string name="drawCard">DRAW CARD</string>
     <string name="wrongTurn">It\'s not your turn, please wait for the other player.</string>
     <string name="invalidMove">Invalid move. Please play a card of the same color, same number, or a draw 4. Otherwise draw a card.</string>
+    <string name="leaveGame">Leave game?</string>
+    <string name="leaveGameDescription">This will end the game for both players and lose all progress.</string>
+    <string name="endGame">END GAME</string>
 
     <!-- SettingsScreen -->
     <string name="settings">SETTINGS</string>

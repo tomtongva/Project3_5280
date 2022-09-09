@@ -20,6 +20,14 @@ fun BasicToolbar(@StringRes title: Int) {
 }
 
 @Composable
+fun BasicToolbar(title: String) {
+    TopAppBar(
+        title = { Text(title) },
+        backgroundColor = toolbarColor()
+    )
+}
+
+@Composable
 fun ActionToolbar(
     @StringRes title: Int,
     @DrawableRes endActionIcon: Int,

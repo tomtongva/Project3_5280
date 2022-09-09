@@ -58,6 +58,10 @@ class NewGameViewModel @Inject constructor(
         }
 
         var discardPile: MutableList<Card> = mutableListOf<Card>()
+
+        while(cards.last().content == "+4") {
+            cards.shuffle()
+        }
         discardPile.add(cards.removeLast())
 
         game.value = game.value.copy(cards = cards, hostHand = hostHand, guestHand = guestHand, discardPile = discardPile)
