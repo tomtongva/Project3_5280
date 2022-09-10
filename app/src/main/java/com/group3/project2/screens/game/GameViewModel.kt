@@ -43,53 +43,54 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
     }
 
-    fun onCardClick(card: Card, hostHand: Boolean) {
+    fun onPlusFourClick(color: String): String {
+        when (PlusFourOption.getByTitle(color)) {
+            PlusFourOption.Blue -> return "blue"
+            PlusFourOption.Green -> return "green"
+            PlusFourOption.Red -> return "red"
+            PlusFourOption.Yellow -> return "yellow"
+        }
+    }
+
+    fun onCardClick(card: Card, hostHand: Boolean, plusFourColor: String) {
         viewModelScope.launch(showErrorExceptionHandler) {
             var editedGame = game.value.copy()
 
-            if (hostHand && game.value.hostsMove) {
-                if (card.content == "+4") {
-                    editedGame.hostHand.remove(card)
-                    var editedCard = card
-                    editedCard.color = "red"
-                    editedGame.discardPile.add(0, editedCard)
+            val validHostMove = findValidHostHand(hostHand)
+            var playingHand: MutableList<Card> = mutableListOf<Card>()
+            var opponentHand: MutableList<Card> = mutableListOf<Card>()
 
-                    for(i in 0..3) {
-                        editedGame.guestHand.add(0, editedGame.cards.removeLast())
-                    }
-
-                    editedGame.hostsMove = false
-                } else if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
-                    editedGame.hostHand.remove(card)
-                    editedGame.discardPile.add(0, card)
-                    editedGame.nextMove = !editedGame.nextMove
-
-                    if (card.content != "S") {
-                        editedGame.hostsMove = false
-                    }
-                } else {
-                    SnackbarManager.showMessage(R.string.invalidMove)
+            // Sets playing hand to host if true, guest if false
+            if (validHostMove != null) {
+                if (validHostMove == true) {
+                    playingHand = editedGame.hostHand
+                    opponentHand = editedGame.guestHand
+                } else if (validHostMove == false) {
+                    playingHand = editedGame.guestHand
+                    opponentHand = editedGame.hostHand
                 }
-            } else if (!hostHand && !game.value.hostsMove) {
+
                 if (card.content == "+4") {
-                    editedGame.guestHand.remove(card)
+                    playingHand.remove(card)
                     var editedCard = card
-                    editedCard.color = "red"
+                    editedCard.color = plusFourColor
                     editedGame.discardPile.add(0, editedCard)
 
                     for(i in 0..3) {
-                        editedGame.hostHand.add(0, editedGame.cards.removeLast())
+                        opponentHand.add(0, editedGame.cards.removeLast())
                     }
 
-                    editedGame.hostsMove = true
+                    editedGame.hostsMove = !editedGame.hostsMove
+                    opponentHand.sortWith(compareBy({ it.color }, { it.content }))
                 } else if (card.content == game.value.discardPile[0].content || card.color == game.value.discardPile[0].color) {
-                    editedGame.guestHand.remove(card)
+                    playingHand.remove(card)
                     editedGame.discardPile.add(0, card)
                     editedGame.nextMove = !editedGame.nextMove
 
                     if (card.content != "S") {
-                        editedGame.hostsMove = true
+                        editedGame.hostsMove = !editedGame.hostsMove
                     }
+                    playingHand.sortWith(compareBy({ it.color }, { it.content }))
                 } else {
                     SnackbarManager.showMessage(R.string.invalidMove)
                 }
@@ -105,34 +106,78 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             var editedGame = game.value.copy()
 
-            val drawnCard: Card
+            val validHostMove = findValidHostHand(hostHand)
+            var playingHand: MutableList<Card> = mutableListOf<Card>()
+            var opponentHand: MutableList<Card> = mutableListOf<Card>()
 
-            if (editedGame.cards.size == 1) {
-                drawnCard = editedGame.cards[0]
-                val placeholderCard = editedGame.discardPile.removeAt(0)
-                editedGame.cards.addAll(editedGame.discardPile)
-                editedGame.discardPile.removeAll(editedGame.discardPile)
-                editedGame.discardPile.add(placeholderCard)
-                editedGame.cards.shuffle()
-            } else {
-                drawnCard = editedGame.cards.removeLast()
-            }
-
-            if (drawnCard.content == game.value.discardPile[0].content || drawnCard.color == game.value.discardPile[0].color) {
-                editedGame.discardPile.add(0, drawnCard)
-                if (drawnCard.content != "S") {
-                    editedGame.hostsMove = !editedGame.hostsMove
+            if (validHostMove != null) {
+                if (validHostMove == true) {
+                    playingHand = editedGame.hostHand
+                    opponentHand = editedGame.guestHand
+                } else if (validHostMove == false) {
+                    playingHand = editedGame.guestHand
+                    opponentHand = editedGame.hostHand
                 }
-            } else if (hostHand && game.value.hostsMove) {
-                editedGame.hostHand.add(0, drawnCard)
-                editedGame.hostsMove = !editedGame.hostsMove
-            } else if (!hostHand && !game.value.hostsMove) {
-                editedGame.guestHand.add(0, drawnCard)
-                editedGame.hostsMove = !editedGame.hostsMove
+
+                val drawnCard: Card
+
+                if (editedGame.cards.size == 1) {
+                    drawnCard = editedGame.cards[0]
+                    val placeholderCard = editedGame.discardPile.removeAt(0)
+                    editedGame.cards.addAll(editedGame.discardPile)
+                    editedGame.discardPile.removeAll(editedGame.discardPile)
+                    editedGame.discardPile.add(placeholderCard)
+                    editedGame.cards.shuffle()
+                } else {
+                    drawnCard = editedGame.cards.removeLast()
+                }
+
+                if (drawnCard.content == "+4") {
+                    var editedCard = drawnCard
+                    editedCard.color = "red"
+                    editedGame.discardPile.add(0, editedCard)
+
+                    for(i in 0..3) {
+                        if (!editedGame.cards.isEmpty()) {
+                            opponentHand.add(0, editedGame.cards.removeLast())
+                        }
+                    }
+
+                    editedGame.hostsMove = !editedGame.hostsMove
+                    opponentHand.sortWith(compareBy({ it.color }, { it.content }))
+
+                    SnackbarManager.showMessage("You drew and played a " + drawnCard.content)
+                } else if (drawnCard.content == game.value.discardPile[0].content || drawnCard.color == game.value.discardPile[0].color) {
+                    editedGame.discardPile.add(0, drawnCard)
+                    if (drawnCard.content != "S") {
+                        editedGame.hostsMove = !editedGame.hostsMove
+                    }
+                    SnackbarManager.showMessage("You drew and played a " + drawnCard.content + " of " + drawnCard.color)
+                } else {
+                    playingHand.add(0, drawnCard)
+                    editedGame.hostsMove = !editedGame.hostsMove
+                    playingHand.sortWith(compareBy({ it.color }, { it.content }))
+                    SnackbarManager.showMessage("You drew a " + drawnCard.content + " of " + drawnCard.color)
+                }
+
+                editedGame.nextMove = !editedGame.nextMove
+            } else {
+                SnackbarManager.showMessage(R.string.wrongTurn)
             }
 
-            editedGame.nextMove = !editedGame.nextMove
             saveGame(editedGame)
+        }
+    }
+
+    // Returns true for a valid host move, false for a valid guest move, null for invalid move
+    private fun findValidHostHand(hostHand: Boolean): Boolean? {
+        return if (hostHand && game.value.hostsMove) {
+            true
+        } else if (!hostHand && !game.value.hostsMove) {
+            false
+        } else {
+            SnackbarManager.showMessage(R.string.wrongTurn)
+            null
         }
     }
 

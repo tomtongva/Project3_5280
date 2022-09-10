@@ -22,7 +22,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.group3.project2.common.ext.contextMenu
 import com.group3.project2.common.ext.dropdownSelector
+import com.group3.project2.screens.game.PlusFourOption
 import com.group3.project2.theme.Black
 import com.group3.project2.theme.Red
 import com.group3.project2.theme.White
@@ -89,9 +91,10 @@ fun UnoCardEditor(
     cardContent: String,
     cardColor: Color,
     modifier: Modifier,
-    onEditClick: () -> Unit,
+    onClick: () -> Unit,
+    onActionClick: (String) -> Unit
 ) {
-    Card(backgroundColor = cardColor, modifier = modifier, onClick = onEditClick) {
+    Card(backgroundColor = cardColor, modifier = modifier, onClick = onClick) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -115,6 +118,14 @@ fun UnoCardEditor(
                     color = White,
                     fontSize = 40.sp
                 )
+
+                if(cardContent == "+4") {
+                    DropdownContextMenu(
+                        PlusFourOption.getOptions(),
+                        Modifier.contextMenu(),
+                        onActionClick
+                    )
+                }
             }
         }
     }

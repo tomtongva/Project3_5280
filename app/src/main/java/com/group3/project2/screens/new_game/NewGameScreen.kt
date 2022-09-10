@@ -3,10 +3,12 @@ package com.group3.project2.screens.new_game
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.common.composable.*
 import com.group3.project2.common.ext.fieldModifier
@@ -22,25 +24,33 @@ fun NewGameScreen(
     modifier: Modifier = Modifier,
     viewModel: NewGameViewModel = hiltViewModel()
 ) {
-    val game by viewModel.game
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text(stringResource(AppText.new_game_create)) },
+                onClick = { viewModel.onDoneClick(openAndPopUp) },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary,
+                modifier = modifier.padding(16.dp)
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Center
     ) {
-        ActionToolbar(
-            title = AppText.new_game,
-            modifier = Modifier.toolbarActions(),
-            endActionIcon = AppIcon.ic_baseline_add_24,
-            endAction = { viewModel.onDoneClick(openAndPopUp) }
-        )
+        val game by viewModel.game
 
-        Spacer(modifier = Modifier.spacer())
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            BasicToolbar(AppText.new_game)
 
-        val fieldModifier = Modifier.fieldModifier()
-        BasicField(AppText.title, game.title, viewModel::onTitleChange, fieldModifier)
+            Spacer(modifier = Modifier.spacer())
+
+            val fieldModifier = Modifier.fieldModifier()
+            BasicField(AppText.title, game.title, viewModel::onTitleChange, fieldModifier)
+        }
     }
 }

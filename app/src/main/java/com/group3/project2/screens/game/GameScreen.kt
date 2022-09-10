@@ -70,7 +70,7 @@ fun GameScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Opponent quit game.",
+                text = "Opponent quit the game.",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
             )
@@ -122,14 +122,34 @@ fun GameScreen(
                         items(game.hostHand.toList(), key = { it.id }) { cardItem ->
                             CardInHand(
                                 card = cardItem,
-                                onClick = { viewModel.onCardClick(cardItem, currentUserIsHost) },
+                                onClick = {
+                                    if (cardItem.content != "+4") {
+                                        viewModel.onCardClick(cardItem, currentUserIsHost, "")
+                                    }
+                                },
+                                onActionClick = { actionColor ->
+                                    if (cardItem.content == "+4") {
+                                        //var plusFourColor = viewModel.onPlusFourClick(actionColor)
+                                        viewModel.onCardClick(cardItem, currentUserIsHost, actionColor)
+                                    }
+                                }
                             )
                         }
                     } else {
                         items(game.guestHand.toList(), key = { it.id }) { cardItem ->
                             CardInHand(
                                 card = cardItem,
-                                onClick = { viewModel.onCardClick(cardItem, currentUserIsHost) }
+                                onClick = {
+                                    if (cardItem.content != "+4") {
+                                        viewModel.onCardClick(cardItem, currentUserIsHost, "")
+                                    }
+                                },
+                                onActionClick = { actionColor ->
+                                    if (cardItem.content == "+4") {
+                                        //var plusFourColor = viewModel.onPlusFourClick(actionColor)
+                                        viewModel.onCardClick(cardItem, currentUserIsHost, actionColor)
+                                    }
+                                }
                             )
                         }
                     }
@@ -138,17 +158,11 @@ fun GameScreen(
                 Spacer(Modifier.height(20.0.dp))
 
                 if (currentUserIsHost && game.hostsMove) {
-                    Text(
-                        text = "Your turn!",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    PlayersTurnText("Your turn!")
                 } else if (!currentUserIsHost && !game.hostsMove) {
-                    Text(
-                        text = "Your turn!",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    PlayersTurnText("Your turn!")
+                } else {
+                    PlayersTurnText("Opponent's turn!")
                 }
             }
         }
@@ -175,9 +189,18 @@ private fun PlayableCard(card: Card) {
         color = Blue
     }
 
-    UnoCardEditor(cardContent = card.content, cardColor = color, modifier = Modifier.playableCard()) {
+    UnoCardEditor(cardContent = card.content, cardColor = color, modifier = Modifier.playableCard(), onClick = {}) {
         //
     }
+}
+
+@Composable
+private fun PlayersTurnText(text: String) {
+    Text(
+        text = text,
+        fontSize = 30.sp,
+        fontWeight = FontWeight.Bold
+    )
 }
 
 @ExperimentalMaterialApi

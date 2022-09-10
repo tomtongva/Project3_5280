@@ -14,6 +14,7 @@ import com.group3.project2.theme.*
 fun CardInHand(
     card: Card,
     onClick: () -> Unit,
+    onActionClick: (String) -> Unit
 ) {
     var color: Color = Color.Black
     if (card.color == "red") {
@@ -30,6 +31,7 @@ fun CardInHand(
         cardContent = card.content,
         cardColor = color,
         modifier = Modifier.handCard(),
-        onEditClick = onClick
+        onClick = onClick,
+        onActionClick = onActionClick
     )
 }

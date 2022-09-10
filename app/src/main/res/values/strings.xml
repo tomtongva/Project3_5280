@@ -22,16 +22,11 @@
 
     <!-- LobbyScreen -->
     <string name="lobby">GAME LOBBY</string>
+    <string name="new_game">CREATE A NEW GAME</string>
 
     <!-- NewGameScreen -->
-    <string name="new_game">CREATE A NEW GAME</string>
-    <string name="title">Title</string>
-    <string name="description">Description</string>
-    <string name="url">URL</string>
-    <string name="date">Date</string>
-    <string name="time">Time</string>
-    <string name="flag">Flag</string>
-    <string name="priority">Priority</string>
+    <string name="new_game_create">CREATE GAME</string>
+    <string name="title">New Game Title</string>
 
     <!-- GameScreen -->
     <string name="drawCard">DRAW CARD</string>

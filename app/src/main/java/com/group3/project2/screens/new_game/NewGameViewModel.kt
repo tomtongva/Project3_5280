@@ -3,7 +3,6 @@ package com.group3.project2.screens.new_game
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.*
-import com.group3.project2.common.ext.idFromParameter
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
@@ -27,25 +26,28 @@ class NewGameViewModel @Inject constructor(
         game.value = game.value.copy(title = newValue)
     }
 
-    private fun createDeck() {
+    private fun createGame() {
         // Create card deck
         var cards: MutableList<Card> = mutableListOf<Card>()
 
+        // Create cards of four different colors and 0-9, S, +4
         val colors = arrayListOf("red", "green", "blue", "yellow")
 
         for (color in colors) {
             for (i in 0..11) {
-                var colorEdit = color
+                var editedColor = color
                 var content = i.toString()
                 if (i == 10) {
                     content = "S"
                 } else if (i == 11) {
                     content = "+4"
-                    colorEdit = ""
+                    editedColor = ""
                 }
-                cards.add(Card(id = content + color, content = content, color = colorEdit))
+                cards.add(Card(id = content + color, content = content, color = editedColor))
             }
         }
+
+        // Shuffle cards
         cards.shuffle()
 
         // Deal 7 cards to each player
@@ -57,8 +59,13 @@ class NewGameViewModel @Inject constructor(
             guestHand.add(cards.removeLast())
         }
 
+        // Sort hands by color then content
+        hostHand.sortWith(compareBy({ it.color }, { it.content }))
+        guestHand.sortWith(compareBy({ it.color }, { it.content }))
+
         var discardPile: MutableList<Card> = mutableListOf<Card>()
 
+        // Does not allow game to start with +4 and adds card from deck to discard game
         while(cards.last().content == "+4") {
             cards.shuffle()
         }
@@ -69,7 +76,7 @@ class NewGameViewModel @Inject constructor(
 
     fun onDoneClick(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            createDeck()
+            createGame()
             val editedGame = game.value.copy(hostId = accountService.getUserId())
             saveGame(editedGame, openAndPopUp)
         }
