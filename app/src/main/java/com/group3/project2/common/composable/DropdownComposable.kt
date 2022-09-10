@@ -21,11 +21,6 @@ fun DropdownContextMenu(options: List<String>, modifier: Modifier, onActionClick
         modifier = modifier,
         onExpandedChange = { isExpanded = !isExpanded }
     ) {
-        Icon(
-            modifier = Modifier.padding(8.dp, 0.dp),
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = "More"
-        )
 
         ExposedDropdownMenu(
             modifier = Modifier.width(180.dp),
