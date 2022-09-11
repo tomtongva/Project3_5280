@@ -107,6 +107,7 @@ fun NavGraphBuilder.unoGraph(appState: UnoAppState) {
     ) {
         GameScreen(
             popUpScreen = { appState.popUp() },
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
             gameId = it.arguments?.getString(GAME_ID) ?: GAME_DEFAULT_ID
         )
     }

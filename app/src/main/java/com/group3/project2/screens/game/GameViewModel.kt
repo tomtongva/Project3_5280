@@ -2,6 +2,9 @@ package com.group3.project2.screens.game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.group3.project2.GAME_SCREEN
+import com.group3.project2.LOBBY_SCREEN
+import com.group3.project2.LOGIN_SCREEN
 import com.group3.project2.R
 import com.group3.project2.common.ext.idFromParameter
 import com.group3.project2.common.snackbar.SnackbarManager
@@ -41,15 +44,6 @@ class GameViewModel @Inject constructor(
 
     fun removeListener() {
         viewModelScope.launch(showErrorExceptionHandler) { storageService.removeListener() }
-    }
-
-    fun onPlusFourClick(color: String): String {
-        when (PlusFourOption.getByTitle(color)) {
-            PlusFourOption.Blue -> return "blue"
-            PlusFourOption.Green -> return "green"
-            PlusFourOption.Red -> return "red"
-            PlusFourOption.Yellow -> return "yellow"
-        }
     }
 
     fun onCardClick(card: Card, hostHand: Boolean, plusFourColor: String) {
@@ -93,6 +87,16 @@ class GameViewModel @Inject constructor(
                     playingHand.sortWith(compareBy({ it.color }, { it.content }))
                 } else {
                     SnackbarManager.showMessage(R.string.invalidMove)
+                }
+
+                if (playingHand.isEmpty()) {
+                    editedGame.gameOver
+
+                    if (game.value.hostsMove) {
+                        editedGame.winner = game.value.hostId
+                    } else {
+                        editedGame.winner = game.value.guestId
+                    }
                 }
             } else {
                 SnackbarManager.showMessage(R.string.wrongTurn)
@@ -181,18 +185,27 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun onExitClick(popUpScreen: () -> Unit) {
+    fun onExitClick(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
             var editedGame = game.value.copy()
             editedGame.gameOver = true
             saveGame(editedGame)
-            popUpScreen()
+            deleteGame(openAndPopUp, game.value)
         }
     }
 
     private fun saveGame(game: Game) {
         storageService.saveGame(game) { error ->
             if (error == null) else onError(error)
+        }
+    }
+
+    private fun deleteGame(openAndPopUp: (String, String) -> Unit, game: Game) {
+        storageService.deleteGame(game.hostId) { error ->
+            if (error == null) {
+                openAndPopUp(LOBBY_SCREEN, GAME_SCREEN)
+            } else onError(error)
+
         }
     }
 
