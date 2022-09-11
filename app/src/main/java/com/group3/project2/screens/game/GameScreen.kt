@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.group3.project2.R
 import com.group3.project2.common.composable.*
 import com.group3.project2.common.ext.*
+import com.group3.project2.common.snackbar.SnackbarManager
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.theme.*
@@ -30,6 +31,7 @@ import com.group3.project2.R.string as AppText
 @Composable
 fun GameScreen(
     popUpScreen: () -> Unit,
+    openAndPopUp: (String, String) -> Unit,
     gameId: String,
     modifier: Modifier = Modifier,
     viewModel: GameViewModel = hiltViewModel()
@@ -42,7 +44,7 @@ fun GameScreen(
     }
 
     deleteGame {
-        viewModel.onExitClick(popUpScreen)
+        viewModel.onExitClick(openAndPopUp)
     }
 
     BasicToolbar(
@@ -63,18 +65,10 @@ fun GameScreen(
             )
         }
     } else if (game.gameOver) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Opponent quit the game.",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-            )
+        if (game.winner == "") {
+            SnackbarManager.showMessage("The previous game was quit.  Please find a new game in the lobby!")
         }
+        viewModel.onExitClick(openAndPopUp)
     } else {
         if (!game.cards.isEmpty() && !game.discardPile.isEmpty()) {
             Column(
@@ -85,6 +79,13 @@ fun GameScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                if (game.hostHand.isEmpty() || game.guestHand.isEmpty()) {
+                    gameOverDialog(currentUser = viewModel.currentUser , winner = game.winner) {
+                        viewModel.onExitClick(openAndPopUp)
+                    }
+                }
+
                 Spacer(Modifier.height(20.0.dp))
 
                 LazyRow {
@@ -129,7 +130,6 @@ fun GameScreen(
                                 },
                                 onActionClick = { actionColor ->
                                     if (cardItem.content == "+4") {
-                                        //var plusFourColor = viewModel.onPlusFourClick(actionColor)
                                         viewModel.onCardClick(cardItem, currentUserIsHost, actionColor)
                                     }
                                 }
@@ -146,7 +146,6 @@ fun GameScreen(
                                 },
                                 onActionClick = { actionColor ->
                                     if (cardItem.content == "+4") {
-                                        //var plusFourColor = viewModel.onPlusFourClick(actionColor)
                                         viewModel.onCardClick(cardItem, currentUserIsHost, actionColor)
                                     }
                                 }
@@ -220,6 +219,37 @@ private fun deleteGame(deleteGame: () -> Unit) {
             confirmButton = {
                 DialogConfirmButton(AppText.endGame) {
                     deleteGame()
+                    showWarningDialog = false
+                }
+            },
+            onDismissRequest = { showWarningDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun gameOverDialog(currentUser: String, winner: String, endGame: () -> Unit) {
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    showWarningDialog = true
+
+    var title = ""
+    var text = ""
+    if (currentUser == winner) {
+        title = "UNO! You won!"
+        text = "You used all of your cards and won the game!"
+    } else {
+        title = "UNO! You lost."
+        text = "Your opponent used all of their cards and won the game!"
+    }
+
+    if(showWarningDialog) {
+        AlertDialog(
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = {
+                DialogConfirmButton(AppText.leaveGameButton) {
+                    endGame()
                     showWarningDialog = false
                 }
             },

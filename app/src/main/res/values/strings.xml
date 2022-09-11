@@ -35,6 +35,7 @@
     <string name="leaveGame">Leave game?</string>
     <string name="leaveGameDescription">This will end the game for both players and lose all progress.</string>
     <string name="endGame">END GAME</string>
+    <string name="leaveGameButton">LEAVE GAME</string>
 
     <!-- SettingsScreen -->
     <string name="settings">SETTINGS</string>
