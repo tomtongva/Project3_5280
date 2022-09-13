@@ -5,8 +5,8 @@
 - Tom Va
 - Jared Tamulynas
 
-## Link for Wireframe
-[Wireframe - Justinmind.com](https://www.justinmind.com/usernote/tests/72514794/72516392/72516394/index.html)
+## Wireframe
+Find the wireframe in the Wireframe.zip file and click on the index.html file
 
 ## Link to Youtube Channel
 [Project Demo](https://www.youtube.com/channel/UCKwWHD5A_Sd6AjV6KCnus1A)
