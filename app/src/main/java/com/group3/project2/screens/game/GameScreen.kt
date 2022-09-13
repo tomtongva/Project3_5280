@@ -112,9 +112,30 @@ fun GameScreen(
 
                 Spacer(Modifier.height(2.dp))
 
-                BasicButton(AppText.drawCard, Modifier.basicButton()) {
-                    viewModel.onDrawCardClick(currentUserIsHost)
-                }
+                BasicButton(
+                    text = AppText.drawCard,
+                    modifier = Modifier.basicButton(),
+                    action = {
+                        val drawnCard = viewModel.onCheckCard()
+                        if (drawnCard.content != "+4") {
+                            viewModel.onDrawCardClick(currentUserIsHost, "")
+                        }
+                    },
+                    cardContent = viewModel.onCheckCard().content,
+                    onActionClick = { actionColor ->
+                        val drawnCard = viewModel.onCheckCard()
+                        if (drawnCard.content == "+4") {
+                            viewModel.onDrawCardClick(currentUserIsHost, actionColor)
+                        }
+                    }
+                )
+//                BasicButton(AppText.drawCard, Modifier.basicButton()) {
+//                    val drawnCard = viewModel.onCheckCard()
+//
+//                    if (drawnCard.content != "+4") {
+//                        viewModel.onDrawCardClick(currentUserIsHost)
+//                    }
+//                }
 
                 Spacer(Modifier.height(12.0.dp))
 

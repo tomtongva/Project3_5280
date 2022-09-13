@@ -106,7 +106,12 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun onDrawCardClick(hostHand: Boolean) {
+    fun onCheckCard(): Card {
+        return game.value.cards[game.value.cards.lastIndex]
+    }
+
+
+    fun onDrawCardClick(hostHand: Boolean, plusFourColor: String) {
         viewModelScope.launch(showErrorExceptionHandler) {
             var editedGame = game.value.copy()
 
@@ -138,7 +143,7 @@ class GameViewModel @Inject constructor(
 
                 if (drawnCard.content == "+4") {
                     var editedCard = drawnCard
-                    editedCard.color = "red"
+                    editedCard.color = plusFourColor
                     editedGame.discardPile.add(0, editedCard)
 
                     for(i in 0..3) {
