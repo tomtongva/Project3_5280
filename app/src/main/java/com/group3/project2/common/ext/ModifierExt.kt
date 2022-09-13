@@ -26,7 +26,7 @@ fun Modifier.handCard(): Modifier {
 }
 
 fun Modifier.contextMenu(): Modifier {
-    return this.wrapContentWidth()
+    return this.fillMaxSize()
 }
 
 fun Modifier.dropdownSelector(): Modifier {
