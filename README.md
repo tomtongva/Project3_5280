@@ -9,7 +9,7 @@
 Find the wireframe in the Wireframe.zip file and click on the index.html file
 
 ## Link to Youtube Channel
-[Project Demo](https://www.youtube.com/channel/UCKwWHD5A_Sd6AjV6KCnus1A)
+[Project Demo](https://youtu.be/HvSJ8CzSp4g)
 
 ---
 ## Project Purpose
