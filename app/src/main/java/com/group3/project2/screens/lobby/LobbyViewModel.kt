@@ -3,6 +3,7 @@ package com.group3.project2.screens.lobby
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.*
+import com.group3.project2.common.utils.GoogleFunctionsEnabled
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
 import com.group3.project2.model.service.LogService
@@ -37,11 +38,13 @@ class LobbyViewModel @Inject constructor(
 
     fun onGameClick(openScreen: (String) -> Unit, game: Game) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            if (accountService.getUserId() != game.hostId) {
-                val editedGame = game.copy(guestId = accountService.getUserId())
-                updateGame(editedGame, openScreen)
+            if(GoogleFunctionsEnabled){
+                //TODO: Add in logic for joinGame
             } else {
-
+                if (accountService.getUserId() != game.hostId) {
+                    val editedGame = game.copy(guestId = accountService.getUserId())
+                    updateGame(editedGame, openScreen)
+                }
             }
         }
     }

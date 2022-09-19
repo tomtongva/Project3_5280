@@ -3,6 +3,7 @@ package com.group3.project2.screens.new_game
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.*
+import com.group3.project2.common.utils.GoogleFunctionsEnabled
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
@@ -76,9 +77,13 @@ class NewGameViewModel @Inject constructor(
 
     fun onDoneClick(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            createGame()
-            val editedGame = game.value.copy(hostId = accountService.getUserId())
-            saveGame(editedGame, openAndPopUp)
+            if(GoogleFunctionsEnabled) {
+                //TODO: Add in logic for createNewGame
+            } else {
+                createGame()
+                val editedGame = game.value.copy(hostId = accountService.getUserId())
+                saveGame(editedGame, openAndPopUp)
+            }
         }
     }
 
