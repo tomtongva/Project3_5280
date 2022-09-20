@@ -6,6 +6,7 @@ import com.group3.project2.*
 import com.group3.project2.common.utils.GoogleFunctionsEnabled
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
+import com.group3.project2.model.service.FunctionService
 import com.group3.project2.model.service.LogService
 import com.group3.project2.model.service.StorageService
 import com.group3.project2.screens.UnoViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class LobbyViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val functionService: FunctionService
 ) : UnoViewModel(logService) {
     var games = mutableStateMapOf<String, Game>()
         private set
@@ -40,6 +42,7 @@ class LobbyViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled){
                 //TODO: Add in logic for joinGame
+                functionService.joinGame("test")
             } else {
                 if (accountService.getUserId() != game.hostId) {
                     val editedGame = game.copy(guestId = accountService.getUserId())

@@ -12,6 +12,7 @@ import com.group3.project2.common.utils.GoogleFunctionsEnabled
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
+import com.group3.project2.model.service.FunctionService
 import com.group3.project2.model.service.LogService
 import com.group3.project2.model.service.StorageService
 import com.group3.project2.screens.UnoViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class GameViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val functionService: FunctionService
 ) : UnoViewModel(logService) {
     var game = mutableStateOf(Game())
         private set
@@ -51,6 +53,7 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic for playCard
+                functionService.playCard("test")
             } else {
                 localPlayCard(card, hostHand, plusFourColor)
             }
@@ -125,6 +128,7 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic for drawCard
+                functionService.drawCard("test")
             } else {
                 localDrawCard(hostHand, plusFourColor)
             }
@@ -213,6 +217,7 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic to leaveGame
+                functionService.leaveGame("test")
             } else {
                 localLeaveGame(openAndPopUp)
             }
