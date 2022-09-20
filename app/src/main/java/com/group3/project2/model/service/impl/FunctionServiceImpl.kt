@@ -5,8 +5,9 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.group3.project2.model.service.FunctionService
+import javax.inject.Inject
 
-class FunctionServiceImpl : FunctionService{
+class FunctionServiceImpl @Inject constructor() : FunctionService{
 
     private var functions: FirebaseFunctions
 
