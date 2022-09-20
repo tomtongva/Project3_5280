@@ -67,7 +67,7 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
         )
 
         return functions
-            .getHttpsCallable("createNewGame")
+            .getHttpsCallable("playCard")
             .call(data)
             .continueWith { task ->
                 val result = task.result?.data as String
@@ -82,7 +82,7 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
         )
 
         return functions
-            .getHttpsCallable("createNewGame")
+            .getHttpsCallable("leaveGame")
             .call(data)
             .continueWith { task ->
                 val result = task.result?.data as String
