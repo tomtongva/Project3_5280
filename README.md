@@ -1,4 +1,4 @@
-# Project 2: ITIS 5280
+# Project 3: ITIS 5280
 ## UNC Charlotte | Advanced Mobile Application Development
 ### Members:
 - Alex Miller
@@ -9,39 +9,42 @@
 Find the wireframe in the Wireframe.zip file and click on the index.html file
 
 ## Link to Youtube Channel
-[Project Demo](https://youtu.be/HvSJ8CzSp4g)
+[Project Demo]
 
 ---
 ## Project Purpose
 
-In this assignment we will use Firebase to create a game application:
+In this assignment you are going to use Callable Firebase Cloud Functions and Push Notifications. The mobile app is focused on updating the UNO application to use cloud functions. The following are the user stories:
 
-- The app should provide Authentication and Signup using the Firebase email/password authentication. The user should be able to signup, login and log out.
-- You should use Firestore to manage the game data and signaling between the different players.
-- The game is the UNO card game for two users. https://en.wikipedia.org/wiki/Uno_(card_game)  (Links to an external site.)
-    - The cards are numbered from 0 to 9, and colored Red, Green, Yellow, and Blue. There are 2 special cards namely, the Skip (One of each color) and Draw 4 (4 cards).
-    - At the beginning of the game each user is dealt 7 cards, and the top card of the remaining deck is flipped over and set aside to begin the discard pile. The game rules follow:
-        - Play one card matching the discard in color, number, or symbol
-        - Play a Wild Draw Four card, which can be played on any color/symbol/number and you will need to select a color.
-        - Draw the top card from the deck, then play it if possible
-    - Each user is only able to see their cards, and the top card on the discard pile. The user is also able to draw 1 card during their turn.
-    - The game is played by the two users and ends when a users finishes their cards.
-    - The app should clearly indicate who's turn is it to make it easier to visualize the turns.
+As a user, I want to be able to register with email/password, so that I can use the app. [Using Firebase]
+As a user, I want to be able to login to use the app, trade and see my progress. [Using Firebase]
+As a user, I want to create a new game. Use Firebase Callable Cloud Functions (FCCF) to create the game, shuffle the cards, and setup the game.
+As a user, I want to join a game. Use FCCF to enable joining a game if possible and return error if the game is not available or if there is no more available player slots (only two players).
+As a user, I want to draw a card. Use FCCF to manage the cards deck, and to serve a card to the user.
+As a user, I want to play a card. Use FCCF to manage a card play, the cards deck, the discard pile and managing the game state.
+As a user, I should be able to leave a game which makes the other player the winner of this game.
+Send a push notification to all the users playing the game when a user has only one card left in their card deck (UNO).
+You should use Firebase Cloud Functions and transactions to ensure atomic operations. The Firebase callable functions would include :
 
-- App UI:
-    - You should design the app UI to enable the usable transition between the screens and make it easy for the user to reach the different app screens. Consider using, a side drawer, or Tab Bar. 
+createNewGame()
+Description: creates a new game, setup the game cards, players, and add the user creating the game as the first player.
+Return gameId for the newly created game.
+joinGame({gameId: "123XF4848534"}) :
+Description: enables a user to join the game if the game is still pending the joining for the second player.
+Returns: Success or ok if the game is joined. Returns exception if the game is not available to be joined by the new player.
+drawCard({gameId: "123XF4848534"})
+Description: enables the player to draw a card if it is their turn to play.
+Returns: card if the player is allowed to draw a card. Returns exception if there is an error.
+playCard({gameId: "123XF4848534", card:"<Depending on how you encode your card>"}))
+Description: enables the player to play the provided card if it is their turn to play.
+Returns: success or ok if successfully played. Returns exception if the card is not allowed, or it is not their turn, or any other error.
+leaveGame({gameId: "123XF4848534"})
+Description: enables the player to leave the game, which should end the game, and should make the other player the winner of this game.
+Returns: success or ok if successfully executed. Returns exception if the game has already ended, or if the player is not part of the game or any other error.
+Submission should include:
 
-#### Submission should include:
-- Start by creating an App mockup/wireframe using a wire-framing tool such as.
-   - https://www.adobe.com/products/xd.html (Links to an external site.)
-   - https://www.justinmind.com/ (Links to an external site.)
-   - https://www.invisionapp.com/ (Links to an external site.)
-   - https://idoc.mockplus.com/?home=1 (Links to an external site.)
-   - https://www.mockplus.com/?r=trista (Links to an external site.)
-   - https://marvelapp.com/ (Links to an external site.)
-   - https://mockflow.com/ (Links to an external site.)
-- The app mockup should be shared online through adobe cloud or other frameworks and should enable the user to walk through the design and interact with components to understand the app flow.
-- Create a Github or Bitbucket repo for the assignment.
-   - Push your code to the created repo. Should contain all your code.
-   - On the same repo create a wiki page describing your design and implementation. The wiki page should describe the data design choices.
-- Demo your App and record an app screencast showing the different app features. Your video should be posted on Youtube and a link included in the Github Wiki page. Make sure the YouTube video is public or link only so that it is viewable through the shared link.
+Create a Github or Bitbucket repo for the assignment.
+Push your code to the created repo. Should contain all your code.
+On the same repo create a wiki page describing your design and implementation. The wiki page should describe the cloud functions, DB Schema and all the assumptions required to provide authentication. In addition describe any data that is stored on the device or on the server
+Demo your API using a mobile app that uses your implemented api.
+A 5 minute (max) screencast to demo your application.
