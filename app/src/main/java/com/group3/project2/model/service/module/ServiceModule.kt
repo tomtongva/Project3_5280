@@ -1,9 +1,11 @@
 package com.group3.project2.model.service.module
 
 import com.group3.project2.model.service.AccountService
+import com.group3.project2.model.service.FunctionService
 import com.group3.project2.model.service.LogService
 import com.group3.project2.model.service.StorageService
 import com.group3.project2.model.service.impl.AccountServiceImpl
+import com.group3.project2.model.service.impl.FunctionServiceImpl
 import com.group3.project2.model.service.impl.LogServiceImpl
 import com.group3.project2.model.service.impl.StorageServiceImpl
 import dagger.Binds
@@ -22,4 +24,7 @@ abstract class ServiceModule {
 
     @Binds
     abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
+
+    @Binds
+    abstract fun provideFunctionService(impl: FunctionServiceImpl): FunctionService
 }

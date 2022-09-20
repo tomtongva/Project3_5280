@@ -3,9 +3,11 @@ package com.group3.project2.screens.new_game
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.group3.project2.*
+import com.group3.project2.common.utils.GoogleFunctionsEnabled
 import com.group3.project2.model.Card
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.AccountService
+import com.group3.project2.model.service.FunctionService
 import com.group3.project2.model.service.LogService
 import com.group3.project2.model.service.StorageService
 import com.group3.project2.screens.UnoViewModel
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class NewGameViewModel @Inject constructor(
     logService: LogService,
     private val storageService: StorageService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val functionService: FunctionService
 ) : UnoViewModel(logService) {
     var game = mutableStateOf(Game())
         private set
@@ -76,9 +79,14 @@ class NewGameViewModel @Inject constructor(
 
     fun onDoneClick(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch(showErrorExceptionHandler) {
-            createGame()
-            val editedGame = game.value.copy(hostId = accountService.getUserId())
-            saveGame(editedGame, openAndPopUp)
+            if(GoogleFunctionsEnabled) {
+                //TODO: Add in logic for createNewGame
+                functionService.createNewGame("test")
+            } else {
+                createGame()
+                val editedGame = game.value.copy(hostId = accountService.getUserId())
+                saveGame(editedGame, openAndPopUp)
+            }
         }
     }
 
