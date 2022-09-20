@@ -36,7 +36,7 @@ class FunctionServiceImpl : FunctionService{
         )
 
         return functions
-            .getHttpsCallable("createNewGame")
+            .getHttpsCallable("joinGame")
             .call(data)
             .continueWith { task ->
                 val result = task.result?.data as String
