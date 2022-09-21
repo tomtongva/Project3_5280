@@ -82,7 +82,8 @@ class NewGameViewModel @Inject constructor(
             if(GoogleFunctionsEnabled) {
                 //TODO: Add in logic for createNewGame
                 functionService.createNewGame(game.value.title)
-                    .addOnSuccessListener {
+                    .addOnCompleteListener { result ->
+                        result.result
                         openAndPopUp("$GAME_SCREEN?$GAME_ID={${accountService.getUserId()}}", NEW_GAME_SCREEN)
                     }
             } else {

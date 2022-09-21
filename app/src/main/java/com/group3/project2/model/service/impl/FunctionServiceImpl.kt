@@ -4,7 +4,9 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.group3.project2.model.Game
 import com.group3.project2.model.service.FunctionService
+import java.util.Objects
 import javax.inject.Inject
 
 class FunctionServiceImpl @Inject constructor() : FunctionService{
@@ -15,17 +17,16 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
         functions = Firebase.functions
     }
 
-    override fun createNewGame(text: String) : Task<String> {
+    override fun createNewGame(text: String) : Task<HashMap<*, *>> {
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "text" to text
         )
 
         return functions
             .getHttpsCallable("createNewGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*,*>
                 result
             }
     }
