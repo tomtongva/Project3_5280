@@ -17,9 +17,9 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
         functions = Firebase.functions
     }
 
-    override fun createNewGame(text: String) : Task<HashMap<*, *>> {
+    override fun createNewGame(gameTitle: String) : Task<HashMap<*, *>> {
         val data = hashMapOf(
-            "text" to text
+            "gameTitle" to gameTitle
         )
 
         return functions
@@ -31,17 +31,17 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
             }
     }
 
-    override fun joinGame(text: String) : Task<String>{
+    override fun joinGame(hostId: String, guestId: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "hostId" to hostId,
+            "guestId" to guestId
         )
 
         return functions
             .getHttpsCallable("joinGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*,*>
                 result
             }
     }
