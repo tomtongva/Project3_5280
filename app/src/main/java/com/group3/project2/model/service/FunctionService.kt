@@ -7,5 +7,5 @@ interface FunctionService {
     fun joinGame(hostId: String, guestId: String) : Task<HashMap<*,*>>
     fun drawCard(text: String) : Task<String>
     fun playCard(text: String) : Task<String>
-    fun leaveGame(text: String) : Task<String>
+    fun leaveGame(gameId: String) : Task<HashMap<*,*>>
 }

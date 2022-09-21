@@ -217,7 +217,7 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic to leaveGame
-                functionService.leaveGame("test")
+                functionService.leaveGame(game.value.hostId)
             } else {
                 localLeaveGame(openAndPopUp)
             }
