@@ -128,7 +128,9 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic for drawCard
-                functionService.drawCard("test")
+                functionService.drawCard(game.value.hostId, hostHand, plusFourColor).addOnCompleteListener { response ->
+                    SnackbarManager.showMessage(response.result.get("message").toString())
+                }
             } else {
                 localDrawCard(hostHand, plusFourColor)
             }
