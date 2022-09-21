@@ -76,17 +76,15 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
             }
     }
 
-    override fun leaveGame(text: String) : Task<String>{
+    override fun leaveGame(gameId: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameId" to gameId
         )
-
         return functions
             .getHttpsCallable("leaveGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }
