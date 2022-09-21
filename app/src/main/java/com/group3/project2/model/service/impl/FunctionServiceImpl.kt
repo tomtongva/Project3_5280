@@ -6,7 +6,6 @@ import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.group3.project2.model.Game
 import com.group3.project2.model.service.FunctionService
-import java.util.Objects
 import javax.inject.Inject
 
 class FunctionServiceImpl @Inject constructor() : FunctionService{
@@ -46,17 +45,18 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
             }
     }
 
-    override fun drawCard(text: String) : Task<String>{
+    override fun drawCard(gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameId" to gameId,
+            "hostHand" to hostHand,
+            "plusFourColor" to plusFourColor
         )
 
         return functions
             .getHttpsCallable("drawCard")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }
