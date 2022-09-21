@@ -1,3 +1,3 @@
 package com.group3.project2.common.utils
 
-var GoogleFunctionsEnabled = true
+var GoogleFunctionsEnabled = false
