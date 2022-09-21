@@ -81,7 +81,10 @@ class NewGameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add in logic for createNewGame
-                functionService.createNewGame("test")
+                functionService.createNewGame(game.value.title)
+                    .addOnSuccessListener {
+                        openAndPopUp("$GAME_SCREEN?$GAME_ID={${accountService.getUserId()}}\", NEW_GAME_SCREEN")
+                }
             } else {
                 createGame()
                 val editedGame = game.value.copy(hostId = accountService.getUserId())
