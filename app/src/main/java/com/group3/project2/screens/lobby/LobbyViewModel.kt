@@ -42,7 +42,8 @@ class LobbyViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled){
                 //TODO: Add in logic for joinGame
-                functionService.joinGame("test")
+                functionService.joinGame(game.hostId, accountService.getUserId())
+                openScreen("$GAME_SCREEN?$GAME_ID={${game.hostId}}")
             } else {
                 if (accountService.getUserId() != game.hostId) {
                     val editedGame = game.copy(guestId = accountService.getUserId())
