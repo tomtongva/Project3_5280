@@ -4,6 +4,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.group3.project2.model.Card
+import com.group3.project2.model.Game
 import com.group3.project2.model.service.FunctionService
 import javax.inject.Inject
 
@@ -15,77 +17,83 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
         functions = Firebase.functions
     }
 
-    override fun createNewGame(text: String) : Task<String> {
+    override fun createNewGame(gameTitle: String) : Task<HashMap<*, *>> {
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameTitle" to gameTitle
         )
 
         return functions
             .getHttpsCallable("createNewGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*,*>
                 result
             }
     }
 
-    override fun joinGame(text: String) : Task<String>{
+    override fun joinGame(hostId: String, guestId: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "hostId" to hostId,
+            "guestId" to guestId
         )
 
         return functions
             .getHttpsCallable("joinGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*,*>
                 result
             }
     }
 
-    override fun drawCard(text: String) : Task<String>{
+    override fun drawCard(gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameId" to gameId,
+            "hostHand" to hostHand,
+            "plusFourColor" to plusFourColor
         )
 
         return functions
             .getHttpsCallable("drawCard")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }
 
-    override fun playCard(text: String) : Task<String>{
+    override fun playCard(card: Card, gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>{
+        val cardMap: HashMap<String, String> = HashMap()
+
+        cardMap.put("color", card.color)
+        cardMap.put("content", card.content)
+        cardMap.put("id", card.id)
+
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "card" to cardMap,
+            "gameId" to gameId,
+            "hostHand" to hostHand,
+            "plusFourColor" to plusFourColor
         )
 
         return functions
             .getHttpsCallable("playCard")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }
 
-    override fun leaveGame(text: String) : Task<String>{
+    override fun leaveGame(gameId: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameId" to gameId
         )
-
         return functions
             .getHttpsCallable("leaveGame")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }

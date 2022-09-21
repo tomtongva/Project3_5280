@@ -53,7 +53,11 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic for playCard
-                functionService.playCard("test")
+                functionService.playCard(card, game.value.hostId, hostHand, plusFourColor).addOnCompleteListener { response ->
+                    if(response.result.get("message") != null) {
+                        SnackbarManager.showMessage(response.result.get("message").toString())
+                    }
+                }
             } else {
                 localPlayCard(card, hostHand, plusFourColor)
             }
@@ -128,7 +132,9 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic for drawCard
-                functionService.drawCard("test")
+                functionService.drawCard(game.value.hostId, hostHand, plusFourColor).addOnCompleteListener { response ->
+                    SnackbarManager.showMessage(response.result.get("message").toString())
+                }
             } else {
                 localDrawCard(hostHand, plusFourColor)
             }
@@ -217,7 +223,7 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch(showErrorExceptionHandler) {
             if(GoogleFunctionsEnabled) {
                 //TODO: Add logic to leaveGame
-                functionService.leaveGame("test")
+                functionService.leaveGame(game.value.hostId)
             } else {
                 localLeaveGame(openAndPopUp)
             }
