@@ -61,17 +61,18 @@ class FunctionServiceImpl @Inject constructor() : FunctionService{
             }
     }
 
-    override fun playCard(text: String) : Task<String>{
+    override fun playCard(gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>{
         val data = hashMapOf(
-            "text" to text,
-            "push" to true
+            "gameId" to gameId,
+            "hostHand" to hostHand,
+            "plusFourColor" to plusFourColor
         )
 
         return functions
             .getHttpsCallable("playCard")
             .call(data)
             .continueWith { task ->
-                val result = task.result?.data as String
+                val result = task.result?.data as HashMap<*, *>
                 result
             }
     }

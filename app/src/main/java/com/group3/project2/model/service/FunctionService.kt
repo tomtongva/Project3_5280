@@ -6,6 +6,6 @@ interface FunctionService {
     fun createNewGame(gameTitle: String) : Task<HashMap<*, *>>
     fun joinGame(hostId: String, guestId: String) : Task<HashMap<*,*>>
     fun drawCard(gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>
-    fun playCard(text: String) : Task<String>
+    fun playCard(gameId: String, hostHand: Boolean, plusFourColor: String) : Task<HashMap<*, *>>
     fun leaveGame(gameId: String) : Task<HashMap<*,*>>
 }
